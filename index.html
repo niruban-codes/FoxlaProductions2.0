@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foxla Productions — Built on Creativity. Powered by Visuals.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --dark:   #0b0d0f;
+      --dark2:  #111416;
+      --dark3:  #1a1d20;
+      --gray:   #515151;
+      --gold-d: #6b5222;
+      --gold-m: #907a63;
+      --gold:   #d0a112;
+      --gold-l: #e8c060;
+      --accent: #7c1010;
+      --white:  #f0ebe4;
+      --off:    #7a7a7a;
+      --border: rgba(208,161,18,.09);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--dark);color:var(--white);font-family:'Poppins',sans-serif;overflow-x:hidden;cursor:none}
+
+    /* CURSOR */
+    #cur{position:fixed;top:0;left:0;z-index:9999;width:8px;height:8px;border-radius:50%;background:var(--gold);pointer-events:none;transform:translate(-50%,-50%);transition:transform .06s}
+    #cur-ring{position:fixed;top:0;left:0;z-index:9998;width:34px;height:34px;border-radius:50%;border:1px solid rgba(208,161,18,.38);pointer-events:none;transform:translate(-50%,-50%);transition:width .22s cubic-bezier(.25,.1,.25,1),height .22s,border-color .2s}
+    .ch #cur{transform:translate(-50%,-50%) scale(0)}
+    .ch #cur-ring{width:56px;height:56px;border-color:rgba(208,161,18,.55)}
+
+    /* SECTION CANVAS */
+    .sc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:1.6rem 5rem;transition:padding .35s,background .35s,border-color .35s;border-bottom:1px solid transparent}
+    nav.stuck{padding:1rem 5rem;background:rgba(11,13,15,.9);backdrop-filter:blur(22px);border-color:var(--border)}
+    .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+    .nav-logo img{height:40px;width:auto;filter:drop-shadow(0 0 12px rgba(208,161,18,.22));transition:transform .35s cubic-bezier(.34,1.56,.64,1),filter .3s}
+    .nav-logo:hover img{transform:scale(1.07);filter:drop-shadow(0 0 18px rgba(208,161,18,.45))}
+    .nav-wm{font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white)}
+    .nav-ul{display:flex;align-items:center;gap:3rem;list-style:none}
+    .nav-ul a{color:rgba(240,235,228,.48);text-decoration:none;font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;position:relative;transition:color .25s}
+    .nav-ul a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+    .nav-ul a:hover{color:var(--gold)}
+    .nav-ul a:hover::after{width:100%}
+    .nav-cta{padding:.52rem 1.6rem;border:1px solid rgba(208,161,18,.32)!important;color:var(--gold)!important;transition:background .25s,border-color .25s!important}
+    .nav-cta:hover{background:rgba(208,161,18,.08)!important;border-color:var(--gold)!important}
+    .nav-cta::after{display:none!important}
+    .ntog{display:none;background:none;border:none;cursor:none;padding:4px;flex-direction:column;gap:5px}
+    .ntog span{display:block;width:22px;height:1px;background:var(--white);transition:transform .3s,opacity .3s}
+
+    /* HERO */
+    #hero{position:relative;height:100vh;min-height:700px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+    #hc{position:absolute;inset:0;width:100%;height:100%;opacity:.52}
+    .hv{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 55% 38%,rgba(124,16,16,.16) 0%,transparent 60%),radial-gradient(ellipse at 15% 75%,rgba(208,161,18,.05) 0%,transparent 50%),linear-gradient(180deg,rgba(11,13,15,0) 30%,rgba(11,13,15,.97) 100%)}
+    .hcnt{position:relative;z-index:2;text-align:center;padding:0 2rem;max-width:1050px}
+    .heb{display:inline-flex;align-items:center;gap:.8rem;font-size:.62rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:2.2rem;opacity:0;animation:fu .9s .35s forwards}
+    .el{width:26px;height:1px;background:var(--gold)}
+    .hh1{font-size:clamp(3.8rem,9vw,8rem);font-weight:800;line-height:.96;letter-spacing:-.03em;color:var(--white);opacity:0;animation:fu .9s .55s forwards}
+    .hh1 .stk{color:transparent;-webkit-text-stroke:1.5px rgba(240,235,228,.2)}
+    .hit{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,2.2vw,1.6rem);font-style:italic;font-weight:300;color:rgba(240,235,228,.42);letter-spacing:.06em;margin-top:1.6rem;opacity:0;animation:fu .9s .78s forwards}
+    .htg{font-size:.62rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-m);margin-top:.6rem;opacity:0;animation:fu .9s .96s forwards}
+    .hcta{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;margin-top:3.8rem;opacity:0;animation:fu .9s 1.15s forwards}
+    .bf{padding:.9rem 2.8rem;background:var(--gold);color:var(--dark);font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);transition:background .25s,transform .3s cubic-bezier(.34,1.56,.64,1)}
+    .bf:hover{background:var(--gold-l);transform:translateY(-3px) scale(1.01)}
+    .bl{padding:.9rem 2.8rem;background:transparent;color:rgba(240,235,228,.72);font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(240,235,228,.14);cursor:none;transition:border-color .25s,color .25s,transform .3s cubic-bezier(.34,1.56,.64,1)}
+    .bl:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
+    .scue{position:absolute;bottom:2.8rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.55rem;opacity:0;animation:fu .9s 1.5s forwards}
+    .scue span{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,235,228,.25)}
+    .sbar{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:bp 2.2s ease-in-out infinite}
+    @keyframes bp{0%,100%{opacity:.22;transform:scaleY(.5) translateY(-12px)}55%{opacity:1;transform:scaleY(1) translateY(0)}}
+
+    /* MARQUEE */
+    .mqw{background:rgba(208,161,18,.038);border-top:1px solid rgba(208,161,18,.08);border-bottom:1px solid rgba(208,161,18,.08);padding:1.1rem 0;overflow:hidden}
+    .mqt{display:flex;gap:3rem;white-space:nowrap;animation:mq 24s linear infinite}
+    .mi{display:flex;align-items:center;gap:.9rem;flex-shrink:0;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(144,122,99,.65)}
+    .md{width:3px;height:3px;border-radius:50%;background:var(--gold)}
+    @keyframes mq{to{transform:translateX(-50%)}}
+
+    /* SECTIONS */
+    section{position:relative;overflow:hidden;padding:9rem 5rem}
+    .sl{display:inline-flex;align-items:center;gap:.7rem;font-size:.6rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem}
+    .sl::before{content:'';width:16px;height:1px;background:var(--gold)}
+    .st{font-size:clamp(2.4rem,4.5vw,4.2rem);font-weight:800;line-height:1.05;letter-spacing:-.025em;color:var(--white)}
+    .st .dim{color:rgba(240,235,228,.2)}
+    .sr{width:40px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:1.3rem 0 2.8rem}
+
+    /* ABOUT */
+    #about{background:var(--dark2)}
+    #about .sc{opacity:.18}
+    .ab-in{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;max-width:1220px;margin:0 auto;align-items:center}
+    .ab-bd p{font-family:'Inter',sans-serif;font-size:1rem;font-weight:300;line-height:1.9;color:rgba(240,235,228,.58);margin-bottom:1.5rem}
+    .ab-bd p strong{color:var(--gold);font-weight:500}
+    .ab-bd p em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08em;color:rgba(240,235,228,.72)}
+    .krow{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem;margin-top:3rem}
+    .kpi{border-left:1px solid rgba(208,161,18,.2);padding-left:1.3rem;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+    .kpi.v{opacity:1;transform:none}
+    .kn{font-size:2.9rem;font-weight:800;color:var(--gold);line-height:1;letter-spacing:-.04em}
+    .kl{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--off);margin-top:.3rem}
+    .ab-fr{position:relative}
+    .ab-fri{position:relative;overflow:hidden;clip-path:polygon(0 0,96% 0,100% 4%,100% 100%,4% 100%,0 96%)}
+    .ab-fri img{width:100%;height:580px;object-fit:cover;filter:grayscale(40%) contrast(1.05) brightness(.86);transition:transform .9s cubic-bezier(.25,.1,.25,1),filter .6s;display:block}
+    .ab-fr:hover .ab-fri img{transform:scale(1.04);filter:grayscale(0%) contrast(1.05) brightness(.9)}
+    .ab-glow{position:absolute;inset:0;background:linear-gradient(140deg,rgba(124,16,16,.2) 0%,transparent 55%)}
+    .fbr{position:absolute;bottom:-10px;right:-10px;width:70px;height:70px;border-right:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold)}
+    .ftl{position:absolute;top:-10px;left:-10px;width:70px;height:70px;border-left:1.5px solid rgba(208,161,18,.22);border-top:1.5px solid rgba(208,161,18,.22)}
+
+    /* SERVICES */
+    #services{background:var(--dark)}
+    #services .sc{opacity:.11}
+    .svh{position:relative;z-index:1;max-width:520px;margin-bottom:4.5rem}
+    .svh p{font-family:'Inter',sans-serif;font-size:.9rem;font-weight:300;color:rgba(240,235,228,.42);line-height:1.85;margin-top:.5rem}
+    .svg-g{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(255,255,255,.035);background:rgba(255,255,255,.022);gap:1px}
+    .svc{background:var(--dark);padding:2.8rem 2.5rem;position:relative;overflow:hidden;cursor:none;transition:background .35s}
+    .svc::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .4s}
+    .svc::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(208,161,18,.045) 0%,transparent 65%);opacity:0;transition:opacity .4s}
+    .svc:hover{background:rgba(20,22,25,.92)}
+    .svc:hover::before,.svc:hover::after{opacity:1}
+    .sn{font-size:.6rem;letter-spacing:.22em;color:var(--gold-m);font-weight:500;margin-bottom:1.6rem}
+    .sg{width:32px;height:32px;margin-bottom:1.6rem;display:flex;align-items:center;justify-content:center}
+    .sg svg{width:28px;height:28px}
+    .snm{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;color:var(--white);margin-bottom:.7rem}
+    .sdsc{font-family:'Inter',sans-serif;font-size:.82rem;color:rgba(240,235,228,.38);line-height:1.8}
+    .slnk{margin-top:1.8rem;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);opacity:0;transform:translateX(-6px);transition:opacity .3s,transform .3s;display:inline-block}
+    .svc:hover .slnk{opacity:1;transform:translateX(0)}
+
+    /* PORTFOLIO */
+    #portfolio{background:var(--dark2);padding-top:9rem;padding-bottom:9rem}
+    #portfolio .sc{opacity:.1}
+    .ph{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3.5rem;flex-wrap:wrap;gap:1.5rem}
+    .pf{display:flex;gap:1.8rem;flex-wrap:wrap}
+    .pfb{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,235,228,.35);background:none;border:none;cursor:none;padding:0;transition:color .25s;font-family:'Poppins',sans-serif}
+    .pfb.on,.pfb:hover{color:var(--gold)}
+    .pfb.on{border-bottom:1px solid var(--gold)}
+    .pg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(12,1fr);gap:1.2rem}
+    .pi{position:relative;overflow:hidden;cursor:none;background:var(--dark3)}
+    .pi:nth-child(1){grid-column:span 7}
+    .pi:nth-child(2){grid-column:span 5}
+    .pi:nth-child(3){grid-column:span 4}
+    .pi:nth-child(4){grid-column:span 4}
+    .pi:nth-child(5){grid-column:span 4}
+    .pi:nth-child(6){grid-column:span 5}
+    .pi:nth-child(7){grid-column:span 7}
+    .pi img{width:100%;height:100%;min-height:250px;object-fit:cover;display:block;filter:grayscale(30%) brightness(.83) contrast(1.06);transition:transform .75s cubic-bezier(.25,.1,.25,1),filter .5s}
+    .pi:nth-child(1) img{min-height:420px}
+    .pi:hover img{transform:scale(1.07);filter:grayscale(0%) brightness(.9) contrast(1.06)}
+    .pov{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,13,15,.88) 0%,rgba(11,13,15,.06) 50%,transparent 100%);opacity:0;transition:opacity .4s;display:flex;align-items:flex-end;padding:1.8rem}
+    .pi:hover .pov{opacity:1}
+    .pc{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem}
+    .pnm{font-size:1rem;font-weight:700;color:var(--white)}
+    .pbg{position:absolute;top:1rem;right:1rem;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:.26rem .65rem;border:1px solid rgba(208,161,18,.32);color:var(--gold);background:rgba(11,13,15,.65);backdrop-filter:blur(6px)}
+
+    /* PROCESS */
+    #process{background:var(--dark3)}
+    #process .sc{opacity:.14}
+    .prh{text-align:center;margin-bottom:6rem;position:relative;z-index:1}
+    .prh .sr{margin-left:auto;margin-right:auto}
+    .steps{display:flex;position:relative;z-index:1}
+    .steps::before{content:'';position:absolute;top:27px;left:10%;width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(208,161,18,.22) 12%,rgba(208,161,18,.22) 88%,transparent)}
+    .step{flex:1;text-align:center;padding:0 1.8rem}
+    .sorb{width:54px;height:54px;border-radius:50%;border:1px solid rgba(208,161,18,.25);background:var(--dark3);display:flex;align-items:center;justify-content:center;margin:0 auto 2.2rem;position:relative;z-index:1;transition:border-color .35s,background .35s}
+    .sorb::after{content:'';position:absolute;inset:-7px;border-radius:50%;border:1px dashed rgba(208,161,18,.1);animation:spin 14s linear infinite}
+    .step:hover .sorb{border-color:var(--gold);background:rgba(208,161,18,.05)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .stn{font-size:.58rem;letter-spacing:.16em;color:var(--gold);font-weight:600}
+    .stit{font-size:1.2rem;font-weight:700;margin:.75rem 0 .6rem}
+    .sbd{font-family:'Inter',sans-serif;font-size:.81rem;color:rgba(240,235,228,.38);line-height:1.75}
+
+    /* REEL */
+    #reel{background:var(--accent);padding:5.5rem 5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+    #reel .sc{opacity:.2}
+    #reel::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 14px,rgba(0,0,0,.06) 14px,rgba(0,0,0,.06) 28px)}
+    #reel h2{font-size:clamp(2rem,4vw,3.4rem);font-weight:800;position:relative;z-index:1}
+    #reel p{font-family:'Inter',sans-serif;font-size:.88rem;color:rgba(255,255,255,.62);margin-top:.8rem;position:relative;z-index:1}
+    .rb{margin-top:2.2rem;display:inline-flex;align-items:center;gap:.85rem;padding:.9rem 2.6rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:none;position:relative;z-index:1;transition:background .25s}
+    .rb:hover{background:rgba(255,255,255,.18)}
+    .pic{width:22px;height:22px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .pic::after{content:'';border:5px solid transparent;border-left:9px solid var(--accent);margin-left:3px}
+
+    /* CONTACT */
+    #contact{background:var(--dark2)}
+    #contact .sc{opacity:.11}
+    .cin{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.1fr;gap:7rem;max-width:1150px;margin:0 auto}
+    .cip p{font-family:'Inter',sans-serif;font-size:.92rem;font-weight:300;color:rgba(240,235,228,.48);line-height:1.85;margin-bottom:3rem}
+    .cd{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem}
+    .cico{width:34px;height:34px;border:1px solid rgba(208,161,18,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .cico svg{width:14px;height:14px}
+    .cd label{display:block;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-m);margin-bottom:.25rem}
+    .cd span{font-size:.87rem;color:var(--white)}
+    .sls{display:flex;gap:.65rem;margin-top:2.8rem}
+    .sc-a{width:38px;height:38px;border:1px solid rgba(240,235,228,.08);display:flex;align-items:center;justify-content:center;color:rgba(240,235,228,.38);text-decoration:none;font-size:.68rem;font-weight:600;cursor:none;transition:border-color .25s,color .25s,background .25s}
+    .sc-a:hover{border-color:var(--gold);color:var(--gold);background:rgba(208,161,18,.05)}
+    .fg{margin-bottom:1.3rem}
+    .fg label{display:block;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-m);margin-bottom:.5rem}
+    .fg input,.fg textarea,.fg select{width:100%;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.065);color:var(--white);padding:.85rem 1.1rem;font-family:'Inter',sans-serif;font-size:.87rem;outline:none;transition:border-color .25s,background .25s;-webkit-appearance:none}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:rgba(208,161,18,.35);background:rgba(208,161,18,.022)}
+    .fg input::placeholder,.fg textarea::placeholder{color:rgba(240,235,228,.18)}
+    .fg textarea{resize:vertical;min-height:115px}
+    .fg select option{background:var(--dark2);color:var(--white)}
+    .fgr{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .bsnd{width:100%;padding:1.05rem;background:var(--gold);color:var(--dark);font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:none;cursor:none;transition:background .25s,transform .25s}
+    .bsnd:hover{background:var(--gold-l);transform:translateY(-2px)}
+    .wa{display:flex;align-items:center;justify-content:center;gap:.8rem;margin-top:.9rem;padding:.88rem;background:rgba(37,211,102,.055);border:1px solid rgba(37,211,102,.18);color:#25d366;text-decoration:none;cursor:none;font-size:.76rem;font-weight:600;letter-spacing:.08em;transition:background .25s}
+    .wa:hover{background:rgba(37,211,102,.13)}
+
+    /* FOOTER */
+    footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.045);padding:4rem 5rem 2.2rem}
+    .ftt{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.045);gap:3rem;flex-wrap:wrap}
+    .fb img{height:33px;margin-bottom:.8rem;filter:brightness(.65);transition:filter .3s}
+    .fb img:hover{filter:brightness(1)}
+    .fb p{font-size:.77rem;color:rgba(240,235,228,.26);max-width:210px;line-height:1.75;font-family:'Inter',sans-serif}
+    .fcol h4{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-m);margin-bottom:1.3rem}
+    .fcol ul{list-style:none}
+    .fcol li{margin-bottom:.6rem}
+    .fcol a{font-family:'Inter',sans-serif;font-size:.79rem;color:rgba(240,235,228,.33);text-decoration:none;transition:color .25s}
+    .fcol a:hover{color:var(--gold)}
+    .ftb{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;flex-wrap:wrap;gap:.8rem}
+    .fcp{font-size:.67rem;color:rgba(240,235,228,.18);font-family:'Inter',sans-serif}
+    .fcp span{color:var(--gold-m)}
+
+    /* REVEAL */
+    .r{opacity:0;transform:translateY(30px);transition:opacity .75s ease,transform .75s ease}
+    .r.v{opacity:1;transform:none}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+    .d4{transition-delay:.4s}.d5{transition-delay:.5s}.d6{transition-delay:.6s}
+
+    @keyframes fu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+    /* RESPONSIVE */
+    @media(max-width:1100px){
+      nav{padding:1.3rem 2.5rem}nav.stuck{padding:.9rem 2.5rem}
+      section{padding:7rem 2.5rem}
+      .ab-in{grid-template-columns:1fr;gap:3rem}
+      .svg-g{grid-template-columns:repeat(2,1fr)}
+      .cin{grid-template-columns:1fr;gap:4rem}
+      footer{padding:3rem 2.5rem 2rem}
+      #reel{padding:4.5rem 2.5rem}
+    }
+    @media(max-width:768px){
+      nav{padding:1rem 1.5rem}nav.stuck{padding:.8rem 1.5rem}
+      section{padding:5.5rem 1.5rem}
+      .nav-ul{display:none}
+      .nav-ul.open{display:flex;flex-direction:column;position:fixed;inset:0;background:rgba(11,13,15,.97);backdrop-filter:blur(22px);align-items:center;justify-content:center;gap:2.5rem;z-index:899}
+      .nav-ul.open a{font-size:1.15rem}
+      .ntog{display:flex;z-index:901}
+      .svg-g{grid-template-columns:1fr}
+      .steps{flex-direction:column;gap:2.5rem}
+      .steps::before{display:none}
+      .pg{display:flex;flex-direction:column}
+      .pi img,.pi:nth-child(1) img{min-height:200px;max-height:300px}
+      .ab-fri img{height:340px}
+      .fgr{grid-template-columns:1fr}
+      .ftt{flex-direction:column}
+      footer{padding:2.5rem 1.5rem 1.5rem}
+      .ftb{flex-direction:column;gap:.4rem;text-align:center}
+      #reel{padding:4rem 1.5rem}
+    }
+  </style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    <img id="ln" src="" alt="Foxla Productions" />
+    <span class="nav-wm">Foxla</span>
+  </a>
+  <ul class="nav-ul" id="nul">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <button class="ntog" id="ntog"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hc"></canvas>
+  <div class="hv"></div>
+  <div class="hcnt">
+    <div class="heb"><span class="el"></span>Creative Production Agency<span class="el"></span></div>
+    <h1 class="hh1">Foxla<br><span class="stk">Productions</span></h1>
+    <p class="hit">"Built on Creativity. Powered by Visuals."</p>
+    <p class="htg">Not Content &nbsp;—&nbsp; Culture.</p>
+    <div class="hcta">
+      <a href="#portfolio" class="bf">View Our Work</a>
+      <a href="#contact" class="bl">Start a Project</a>
+    </div>
+  </div>
+  <div class="scue"><span>Scroll</span><div class="sbar"></div></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mqw">
+  <div class="mqt">
+    <div class="mi"><span class="md"></span>Photography</div>
+    <div class="mi"><span class="md"></span>Video Production</div>
+    <div class="mi"><span class="md"></span>Commercial Ads</div>
+    <div class="mi"><span class="md"></span>Creative Direction</div>
+    <div class="mi"><span class="md"></span>Brand Identity</div>
+    <div class="mi"><span class="md"></span>Web Design</div>
+    <div class="mi"><span class="md"></span>Motion Graphics</div>
+    <div class="mi"><span class="md"></span>Photography</div>
+    <div class="mi"><span class="md"></span>Video Production</div>
+    <div class="mi"><span class="md"></span>Commercial Ads</div>
+    <div class="mi"><span class="md"></span>Creative Direction</div>
+    <div class="mi"><span class="md"></span>Brand Identity</div>
+    <div class="mi"><span class="md"></span>Web Design</div>
+    <div class="mi"><span class="md"></span>Motion Graphics</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <canvas class="sc" data-s="about"></canvas>
+  <div class="ab-in">
+    <div class="ab-bd r">
+      <div class="sl">About Us</div>
+      <h2 class="st">Where Vision<br><span class="dim">Meets the Lens</span></h2>
+      <div class="sr"></div>
+      <p>Foxla Productions is a <strong>premium creative agency</strong> born from a singular obsession — to craft visual stories that don't just communicate, they <em>resonate</em>. We don't produce content. We engineer culture.</p>
+      <p>From cinematic brand films to editorial photography and immersive digital experiences, every project we touch is a deliberate act of <strong>strategic artistry</strong>. We bridge the gap between bold ideas and flawless execution.</p>
+      <p>We partner with brands that refuse to be ordinary. If you're building something worth seeing — <strong>we're the team to show it</strong>.</p>
+      <div class="krow">
+        <div class="kpi r d1"><div class="kn">120+</div><div class="kl">Projects Delivered</div></div>
+        <div class="kpi r d2"><div class="kn">06</div><div class="kl">Years of Excellence</div></div>
+        <div class="kpi r d3"><div class="kn">48+</div><div class="kl">Brand Partnerships</div></div>
+        <div class="kpi r d4"><div class="kn">12M</div><div class="kl">Views Generated</div></div>
+      </div>
+    </div>
+    <div class="ab-fr r d2">
+      <div class="ftl"></div>
+      <div class="ab-fri">
+        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=900&auto=format&fit=crop&q=85" alt="Studio" />
+        <div class="ab-glow"></div>
+      </div>
+      <div class="fbr"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <canvas class="sc" data-s="services"></canvas>
+  <div class="svh r">
+    <div class="sl">What We Do</div>
+    <h2 class="st">Craft at Every<br><span class="dim">Touchpoint</span></h2>
+    <div class="sr"></div>
+    <p>End-to-end creative services that elevate brands from transactional to transcendent. Each discipline executed with obsessive attention to craft.</p>
+  </div>
+  <div class="svg-g">
+
+    <div class="svc r d1">
+      <div class="sn">01</div>
+      <div class="sg"><svg viewBox="0 0 28 28" fill="none"><rect x="1" y="5" width="26" height="18" rx="2" stroke="rgba(208,161,18,.48)" stroke-width="1.2"/><circle cx="14" cy="14" r="5" stroke="rgba(208,161,18,.48)" stroke-width="1.2"/><circle cx="14" cy="14" r="2" fill="rgba(208,161,18,.28)"/><rect x="19" y="7" width="4" height="3" rx=".8" fill="rgba(208,161,18,.28)"/></svg></div>
+      <div class="snm">Photography</div>
+      <p class="sdsc">Editorial, commercial, and lifestyle photography that captures the soul of your brand. Every frame tells a story worth stopping for.</p>
+      <span class="slnk">Explore →</span>
+    </div>
+
+    <div class="svc r d2">
+      <div class="sn">02</div>
+      <div class="sg"><svg viewBox="0 0 28 28" fill="none"><rect x="1" y="6" width="19" height="16" rx="2" stroke="rgba(208,161,18,.48)" stroke-width="1.2"/><path d="M20 10.5L27 7v14l-7-3.5V10.5Z" stroke="rgba(208,161,18,.48)" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 14h6M10 11v6" stroke="rgba(208,161,18,.28)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="snm">End-to-End Video Production</div>
+      <p class="sdsc">From concept to color grade — full pipeline. Scripting, direction, shoot, post-production, and delivery at the highest standard.</p>
+      <span class="slnk">Explore →</span>
+    </div>
+
+    <div class="svc r d3">
+      <div class="sn">03</div>
+      <div class="sg"><svg viewBox="0 0 28 28" fill="none"><path d="M4 20L14 6l10 14H4Z" stroke="rgba(208,161,18,.48)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="14" cy="10" r="2" fill="rgba(208,161,18,.28)"/><path d="M2 24h24" stroke="rgba(208,161,18,.28)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="snm">Commercial Ads</div>
+      <p class="sdsc">High-converting productions for TV, digital, and social. Ads that don't interrupt — they engage, captivate, and convert with purpose.</p>
+      <span class="slnk">Explore →</span>
+    </div>
+
+    <div class="svc r d1">
+      <div class="sn">04</div>
+      <div class="sg"><svg viewBox="0 0 28 28" fill="none"><path d="M14 3L25 8.5v11L14 25 3 19.5v-11L14 3Z" stroke="rgba(208,161,18,.48)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="14" cy="14" r="4" stroke="rgba(208,161,18,.38)" stroke-width="1"/><circle cx="14" cy="14" r="1.5" fill="rgba(208,161,18,.32)"/></svg></div>
+      <div class="snm">Creative Direction & Design</div>
+      <p class="sdsc">Strategic creative vision for campaigns, brand identities, and visual systems. We define the aesthetic DNA of your brand at every level.</p>
+      <span class="slnk">Explore →</span>
+    </div>
+
+    <div class="svc r d2">
+      <div class="sn">05</div>
+      <div class="sg"><svg viewBox="0 0 28 28" fill="none"><path d="M5 22L14 5l9 17" stroke="rgba(208,161,18,.48)" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 17h12" stroke="rgba(208,161,18,.28)" stroke-width="1.2" stroke-linecap="round"/><circle cx="14" cy="5" r="1.5" fill="rgba(208,161,18,.32)"/></svg></div>
+      <div class="snm">Motion Graphics</div>
+      <p class="sdsc">Kinetic typography, animated brand assets, and visual effects that bring digital touchpoints to life with precision and cinematic flair.</p>
+      <span class="slnk">Explore →</span>
+    </div>
+
+    <div class="svc r d3">
+      <div class="sn">06</div>
+      <div class="sg"><svg viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="16" rx="2" stroke="rgba(208,161,18,.48)" stroke-width="1.2"/><path d="M9 20v4M19 20v4M6 24h16" stroke="rgba(208,161,18,.38)" stroke-width="1.2" stroke-linecap="round"/><path d="M7 10h4M7 13h8" stroke="rgba(208,161,18,.28)" stroke-width="1.2" stroke-linecap="round"/><rect x="15" y="8" width="8" height="7" rx="1" stroke="rgba(208,161,18,.28)" stroke-width="1"/></svg></div>
+      <div class="snm">Website Design & Development</div>
+      <p class="sdsc">Premium digital experiences built for performance and beauty. From UX strategy to pixel-perfect code — web presences that convert.</p>
+      <span class="slnk">Explore →</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <canvas class="sc" data-s="portfolio"></canvas>
+  <div class="ph r">
+    <div>
+      <div class="sl">Selected Work</div>
+      <h2 class="st">The Portfolio</h2>
+      <div class="sr"></div>
+    </div>
+    <div class="pf">
+      <button class="pfb on">All</button>
+      <button class="pfb">Photography</button>
+      <button class="pfb">Video</button>
+      <button class="pfb">Commercial</button>
+    </div>
+  </div>
+  <div class="pg">
+    <div class="pi r"><span class="pbg">Film</span><img src="https://images.unsplash.com/photo-1536240478700-b869ad10025f?w=1000&auto=format&fit=crop&q=80" alt="Brand Film"/><div class="pov"><div><div class="pc">Brand Film</div><div class="pnm">Luminara — Brand Story</div></div></div></div>
+    <div class="pi r d1"><span class="pbg">Editorial</span><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&auto=format&fit=crop&q=80" alt="Editorial"/><div class="pov"><div><div class="pc">Editorial</div><div class="pnm">Void Collection</div></div></div></div>
+    <div class="pi r d2"><span class="pbg">Lifestyle</span><img src="https://images.unsplash.com/photo-1504700610630-ac6aba3536d3?w=700&auto=format&fit=crop&q=80" alt="Lifestyle"/><div class="pov"><div><div class="pc">Lifestyle</div><div class="pnm">Atmosphere Series</div></div></div></div>
+    <div class="pi r d3"><span class="pbg">Identity</span><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&auto=format&fit=crop&q=80" alt="Brand"/><div class="pov"><div><div class="pc">Brand Identity</div><div class="pnm">Onyx — Rebrand</div></div></div></div>
+    <div class="pi r d4"><span class="pbg">Campaign</span><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=700&auto=format&fit=crop&q=80" alt="Campaign"/><div class="pov"><div><div class="pc">Campaign</div><div class="pnm">Raven — Social Campaign</div></div></div></div>
+    <div class="pi r d2"><span class="pbg">Commercial</span><img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=700&auto=format&fit=crop&q=80" alt="Ad"/><div class="pov"><div><div class="pc">Commercial</div><div class="pnm">Nexus — Product Launch</div></div></div></div>
+    <div class="pi r d1"><span class="pbg">Photo</span><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=900&auto=format&fit=crop&q=80" alt="Studio"/><div class="pov"><div><div class="pc">Photography</div><div class="pnm">Studio — Interiors</div></div></div></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <canvas class="sc" data-s="process"></canvas>
+  <div class="prh r">
+    <div class="sl" style="justify-content:center">How We Work</div>
+    <h2 class="st" style="text-align:center">The Process</h2>
+    <div class="sr"></div>
+  </div>
+  <div class="steps">
+    <div class="step r d1"><div class="sorb"><span class="stn">01</span></div><h3 class="stit">Concept</h3><p class="sbd">We dive into your brand's DNA. Strategy sessions, mood boards, and briefs that set the north star for everything that follows.</p></div>
+    <div class="step r d2"><div class="sorb"><span class="stn">02</span></div><h3 class="stit">Create</h3><p class="sbd">Scripting, storyboarding, design systems, pre-production planning. The blueprint is perfected before we pick up a camera.</p></div>
+    <div class="step r d3"><div class="sorb"><span class="stn">03</span></div><h3 class="stit">Capture</h3><p class="sbd">Our team brings the vision to life with cinematic precision, high-end gear, and obsessive attention to every detail.</p></div>
+    <div class="step r d4"><div class="sorb"><span class="stn">04</span></div><h3 class="stit">Deliver</h3><p class="sbd">Post-production, grading, retouching, deployment. Polished, on-brand, and on time — every single time, no exceptions.</p></div>
+  </div>
+</section>
+
+<!-- REEL -->
+<div id="reel" class="r">
+  <canvas class="sc" data-s="reel"></canvas>
+  <h2>Ready to see what we're made of?</h2>
+  <p>Watch our latest showreel — two minutes that say more than a thousand words.</p>
+  <a href="#contact" class="rb"><div class="pic"></div>Watch Showreel</a>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <canvas class="sc" data-s="contact"></canvas>
+  <div class="cin">
+    <div class="cip r">
+      <div class="sl">Let's Talk</div>
+      <h2 class="st">Start Your<br><span class="dim">Next Chapter</span></h2>
+      <div class="sr"></div>
+      <p>Whether you have a fully formed brief or just a spark of an idea — we want to hear it. Tell us what you're building and let's figure out how to make it extraordinary.</p>
+      <div class="cd"><div class="cico"><svg viewBox="0 0 14 14" fill="none" stroke="rgba(208,161,18,.55)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3l6 4 6-4M1 3h12v8H1V3Z"/></svg></div><div><label>Email</label><span>hello@foxlaproductions.com</span></div></div>
+      <div class="cd"><div class="cico"><svg viewBox="0 0 14 14" fill="none" stroke="rgba(208,161,18,.55)" stroke-width="1.2" stroke-linecap="round"><path d="M2 2.5a1 1 0 011-1h2l1 3-1.5 1a9 9 0 004 4l1-1.5 3 1v2a1 1 0 01-1 1C5.3 13 1 8.7 1 3.5a1 1 0 011-1z"/></svg></div><div><label>Phone</label><span>+94 77 000 0000</span></div></div>
+      <div class="cd"><div class="cico"><svg viewBox="0 0 14 14" fill="none" stroke="rgba(208,161,18,.55)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1C4.8 1 3 2.8 3 5c0 3.3 4 8 4 8s4-4.7 4-8c0-2.2-1.8-4-4-4Z"/><circle cx="7" cy="5" r="1.3"/></svg></div><div><label>Based In</label><span>Colombo, Sri Lanka</span></div></div>
+      <div class="sls">
+        <a href="#" class="sc-a">IG</a><a href="#" class="sc-a">YT</a><a href="#" class="sc-a">LI</a><a href="#" class="sc-a">Be</a><a href="#" class="sc-a">TK</a>
+      </div>
+    </div>
+    <div class="r d2">
+      <div class="fgr">
+        <div class="fg"><label>First Name</label><input type="text" placeholder="Alex"/></div>
+        <div class="fg"><label>Last Name</label><input type="text" placeholder="Morgan"/></div>
+      </div>
+      <div class="fg"><label>Email Address</label><input type="email" placeholder="alex@company.com"/></div>
+      <div class="fg"><label>Service</label><select><option value="" disabled selected>Select a service</option><option>Photography</option><option>Video Production</option><option>Commercial Ad</option><option>Creative Direction</option><option>Website Design & Development</option><option>Full Campaign</option></select></div>
+      <div class="fg"><label>Your Project</label><textarea placeholder="What are you building? What's the vision? What's the deadline?"></textarea></div>
+      <button class="bsnd" id="bsnd">Send Message →</button>
+      <a href="https://wa.me/94770000000" class="wa" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Chat on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ftt">
+    <div class="fb"><img id="lf" src="" alt="Foxla Productions"/><p>Not content. Culture. A creative production studio obsessed with visual storytelling and brand craft.</p></div>
+    <div class="fcol"><h4>Navigate</h4><ul><li><a href="#about">About Us</a></li><li><a href="#services">Services</a></li><li><a href="#portfolio">Portfolio</a></li><li><a href="#process">Process</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="fcol"><h4>Services</h4><ul><li><a href="#services">Photography</a></li><li><a href="#services">Video Production</a></li><li><a href="#services">Commercial Ads</a></li><li><a href="#services">Creative Direction</a></li><li><a href="#services">Web Design & Dev</a></li></ul></div>
+    <div class="fcol"><h4>Social</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">YouTube</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Behance</a></li><li><a href="#">TikTok</a></li></ul></div>
+  </div>
+  <div class="ftb">
+    <p class="fcp">© 2025 <span>Foxla Productions</span>. All rights reserved.</p>
+    <p class="fcp">Crafted with obsession in <span>Colombo, Sri Lanka</span></p>
+  </div>
+</footer>
+
+<script>
+/* ── LOGO ── */
+const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 100" fill="none"><defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8e8e8"/><stop offset="45%" stop-color="#b8cdd8"/><stop offset="100%" stop-color="#d0a112" stop-opacity=".6"/></linearGradient><linearGradient id="b" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a0bfcc" stop-opacity=".7"/><stop offset="100%" stop-color="#d0a112" stop-opacity=".35"/></linearGradient></defs><path d="M60 10 L82 12 L96 26 L100 44 L90 60 L74 68 L60 66 L48 56 L44 42 L50 26 Z" fill="url(#a)" opacity=".96"/><path d="M74 12 L88 4 L90 20 L76 18 Z" fill="url(#a)"/><path d="M44 42 L50 26 L60 10 L48 56 Z" fill="rgba(0,0,0,.12)"/><path d="M74 12 L96 26 L100 44 L90 60" stroke="url(#b)" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M10 50 L40 44" stroke="url(#a)" stroke-width="4" stroke-linecap="round"/><path d="M6 59 L36 55" stroke="url(#a)" stroke-width="3.2" stroke-linecap="round" opacity=".82"/><path d="M12 68 L38 66" stroke="url(#a)" stroke-width="2.5" stroke-linecap="round" opacity=".65"/><path d="M20 77 L42 77" stroke="url(#a)" stroke-width="1.8" stroke-linecap="round" opacity=".45"/><path d="M10 50 L40 44" stroke="url(#b)" stroke-width="1.4" stroke-linecap="round" opacity=".5"/></svg>`;
+const burl=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
+['ln','lf'].forEach(id=>{const el=document.getElementById(id);if(el)el.src=burl;});
+
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.querySelectorAll('a,button,.pi,.svc,.ab-fr').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* ── NAV ── */
+const nv=document.getElementById('nav'),nul=document.getElementById('nul'),ntog=document.getElementById('ntog');
+window.addEventListener('scroll',()=>nv.classList.toggle('stuck',scrollY>55));
+ntog.addEventListener('click',()=>nul.classList.toggle('open'));
+nul.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nul.classList.remove('open')));
+
+/* ── HERO SHADER ── */
+(function(){
+  const c=document.getElementById('hc'),gl=c.getContext('webgl2');if(!gl)return;
+  const vs=`#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}`;
+  const fs=`#version 300 es
+precision highp float;
+out vec4 O;
+uniform vec2 R;uniform float T;
+#define FC gl_FragCoord.xy
+float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(rnd(i),rnd(i+vec2(1,0)),u.x),mix(rnd(i+vec2(0,1)),rnd(i+1.),u.x),u.y);}
+float fbm(vec2 p){float t=0.,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*n(p);p*=2.*m;a*=.5;}return t;}
+float cl(vec2 p){float d=1.,t=0.;for(float i=0.;i<3.;i++){float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}
+void main(){
+  vec2 uv=(FC-.5*R)/min(R.x,R.y),st=uv*vec2(2.,1.);
+  vec3 col=vec3(0.);
+  float bg=cl(vec2(st.x+T*.28,-st.y));
+  uv*=1.-.3*(sin(T*.14)*.5+.5);
+  for(float i=1.;i<12.;i++){
+    uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.38+.1*uv.x);
+    float d=length(uv);
+    vec3 w=cos(sin(i)*vec3(1.,.55,.08))+1.;
+    col+=.0011/d*w;
+    float b=n(i+uv+bg*1.73);
+    col+=.0018*b/length(max(uv,vec2(b*uv.x*.02,uv.y)));
+    col=mix(col,vec3(bg*.16,bg*.09,bg*.03),d);
+  }
+  col.r*=1.35;col.g*=.82;col.b*=.48;
+  O=vec4(col,1.);
+}`;
+  function ms(t,s){const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+  const p=gl.createProgram();gl.attachShader(p,ms(gl.VERTEX_SHADER,vs));gl.attachShader(p,ms(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);gl.useProgram(p);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,1,-1,-1,1,1,1,-1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(p,'position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+  const uR=gl.getUniformLocation(p,'R'),uT=gl.getUniformLocation(p,'T');
+  function rz(){c.width=c.offsetWidth*Math.min(devicePixelRatio,1.5);c.height=c.offsetHeight*Math.min(devicePixelRatio,1.5);gl.viewport(0,0,c.width,c.height);}
+  rz();window.addEventListener('resize',rz);
+  const t0=performance.now();
+  (function lp(now){gl.uniform2f(uR,c.width,c.height);gl.uniform1f(uT,(now-t0)*.001);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(lp);})(t0);
+})();
+
+/* ── SECTION SHADERS (mesh gradient — used in all non-hero sections) ── */
+(function(){
+  const vs=`#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}`;
+  const fs=`#version 300 es
+precision highp float;
+out vec4 O;
+uniform vec2 R;uniform float T;
+uniform vec3 C1,C2;uniform float SP,WV;
+#define FC gl_FragCoord.xy
+float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(rnd(i),rnd(i+vec2(1,0)),u.x),mix(rnd(i+vec2(0,1)),rnd(i+1.),u.x),u.y);}
+float fbm(vec2 p){float t=0.,a=.5;for(int i=0;i<4;i++){t+=a*n(p);p*=2.1;a*=.5;}return t;}
+void main(){
+  vec2 uv=FC/R;float t=T*SP;
+  vec2 q=vec2(fbm(uv+vec2(t*.11,t*.08)),fbm(uv+vec2(t*.07,t*.13)));
+  vec2 r2=vec2(fbm(uv+q+vec2(1.7+t*.04,9.2+t*.03)),fbm(uv+q+vec2(8.3+t*.06,2.8+t*.05)));
+  float f=fbm(uv*WV+r2);
+  vec3 col=mix(C1,C2,clamp(f*f*4.,0.,1.));
+  col=mix(col,C2*1.3,clamp(length(q),0.,1.));
+  col=mix(col,C1*.4,f*f*f);
+  vec2 vc=uv-.5;col*=clamp(1.-dot(vc,vc)*2.8,0.,1.);
+  O=vec4(col,.52);
+}`;
+
+  const CFG={
+    about:    {C1:[.10,.08,.04],C2:[.25,.18,.04],SP:.17,WV:2.5},
+    services: {C1:[.06,.06,.06],C2:[.20,.13,.02],SP:.13,WV:3.0},
+    portfolio:{C1:[.08,.05,.04],C2:[.18,.10,.03],SP:.15,WV:2.2},
+    process:  {C1:[.06,.05,.05],C2:[.22,.15,.02],SP:.11,WV:2.8},
+    reel:     {C1:[.24,.03,.03],C2:[.38,.06,.04],SP:.2,WV:3.4},
+    contact:  {C1:[.07,.06,.05],C2:[.20,.14,.03],SP:.14,WV:2.6},
+  };
+
+  document.querySelectorAll('.sc').forEach(cv=>{
+    const key=cv.dataset.s,cfg=CFG[key];if(!cfg)return;
+    const gl=cv.getContext('webgl2');if(!gl)return;
+    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+
+    function ms(t,s){const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+    const p=gl.createProgram();gl.attachShader(p,ms(gl.VERTEX_SHADER,vs));gl.attachShader(p,ms(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);gl.useProgram(p);
+    const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,1,-1,-1,1,1,1,-1]),gl.STATIC_DRAW);
+    const pos=gl.getAttribLocation(p,'position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+    gl.uniform3fv(gl.getUniformLocation(p,'C1'),cfg.C1);
+    gl.uniform3fv(gl.getUniformLocation(p,'C2'),cfg.C2);
+    gl.uniform1f(gl.getUniformLocation(p,'SP'),cfg.SP);
+    gl.uniform1f(gl.getUniformLocation(p,'WV'),cfg.WV);
+    const uR=gl.getUniformLocation(p,'R'),uT=gl.getUniformLocation(p,'T');
+    const par=cv.parentElement;
+    function rz(){const dpr=Math.min(devicePixelRatio,1);cv.width=par.offsetWidth*dpr;cv.height=par.offsetHeight*dpr;gl.viewport(0,0,cv.width,cv.height);}
+    rz();window.addEventListener('resize',rz);
+    const t0=performance.now();let run=false,raf=null;
+    function lp(now){gl.uniform2f(uR,cv.width,cv.height);gl.uniform1f(uT,(now-t0)*.001);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);raf=requestAnimationFrame(lp);}
+    new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&!run){run=true;raf=requestAnimationFrame(lp);}else if(!e.isIntersecting&&run){run=false;cancelAnimationFrame(raf);}});},{threshold:.01}).observe(par);
+  });
+})();
+
+/* ── REVEAL ── */
+new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');});},{threshold:.1})
+  .observe||(() => {})();
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');});},{threshold:.1});
+document.querySelectorAll('.r,.kpi').forEach(el=>ro.observe(el));
+
+/* ── PORTFOLIO FILTER ── */
+document.querySelectorAll('.pfb').forEach(b=>{
+  b.addEventListener('click',()=>{document.querySelectorAll('.pfb').forEach(x=>x.classList.remove('on'));b.classList.add('on');});
+});
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});
+});
+
+/* ── FORM ── */
+document.getElementById('bsnd').addEventListener('click',function(){
+  this.textContent='Message Sent  ✓';this.style.background='#1f5c35';this.style.color='#fff';
+  setTimeout(()=>{this.textContent='Send Message →';this.style.background='';this.style.color='';},3500);
+});
+</script>
+</body>
+</html>
