@@ -18,19 +18,72 @@
 
     <div id="photo-modal" class="modal-overlay">
       <button class="modal-close" id="pm-close">Close ✕</button>
-      <div class="modal-glow"></div>
+
+      <div class="modal-ambient-glow"></div>
 
       <div class="stack-counter">
-        <span id="st-curr">01</span>
+        <span id="st-curr" class="st-num">01</span>
         <div class="st-line"></div>
-        <span id="st-tot">05</span>
+        <span id="st-tot" class="st-total">05</span>
       </div>
 
       <div class="stack-container" id="stack-container"></div>
 
       <div class="stack-nav" id="stack-nav"></div>
 
-      <div class="scroll-hint">
+      <div class="stack-hint">
+        <div class="bounce-up">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 5v14M5 12l7-7 7 7" />
+          </svg>
+        </div>
+        <span>Scroll or drag</span>
+        <div class="bounce-down">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 5v14M19 12l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div id="video-modal" class="modal-overlay">
+      <button class="modal-close" id="vm-close">Close ✕</button>
+
+      <div class="vm-toggle">
+        <button class="vm-tab active" data-target="production">
+          Production
+        </button>
+        <button class="vm-tab" data-target="commercial">Commercial</button>
+      </div>
+
+      <div class="vm-title-container">
+        <h2 id="vm-title-left" class="vm-title">End-to-End</h2>
+        <h2 id="vm-title-right" class="vm-title">Video</h2>
+      </div>
+
+      <div class="vm-video-wrapper" id="vm-wrapper">
+        <video id="vm-video" src="" autoplay muted loop playsinline></video>
+        <div class="vm-video-overlay" id="vm-overlay"></div>
+      </div>
+
+      <div class="scroll-hint" id="vm-hint">
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -41,21 +94,9 @@
         >
           <path d="M12 5v14M5 12l7-7 7 7" />
         </svg>
-        <span>Scroll</span>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="animation-delay: 0.5s"
-        >
-          <path d="M12 5v14M19 12l-7 7-7-7" />
-        </svg>
+        <span>Scroll to expand</span>
       </div>
     </div>
-
     <nav id="nav">
       <a href="#hero" class="nav-logo">
         <img id="ln" src="assets/logo/logo.png" alt="Foxla Productions" />
@@ -255,7 +296,9 @@
             From concept to color grade — full pipeline. Scripting, direction,
             shoot, post-production, and delivery at the highest standard.
           </p>
-          <span class="slnk">Explore →</span>
+          <button class="slnk btn-video-explore" data-vid="production">
+            Explore Video →
+          </button>
         </div>
 
         <div class="svc r d3">
@@ -282,7 +325,9 @@
             High-converting productions for TV, digital, and social. Ads that
             don't interrupt — they engage, captivate, and convert with purpose.
           </p>
-          <span class="slnk">Explore →</span>
+          <button class="slnk btn-video-explore" data-vid="production">
+            Explore Video →
+          </button>
         </div>
 
         <div class="svc r d1">

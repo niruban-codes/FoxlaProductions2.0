@@ -1,55 +1,30 @@
 /* ── CURSOR ── */
-      const cur = document.getElementById("cur"),
-        ring = document.getElementById("cur-ring");
-      let mx = 0,
-        my = 0,
-        rx = 0,
-        ry = 0;
-      document.addEventListener("mousemove", (e) => {
-        mx = e.clientX;
-        my = e.clientY;
-      });
-      (function t() {
-        cur.style.left = mx + "px";
-        cur.style.top = my + "px";
-        rx += (mx - rx) * 0.11;
-        ry += (my - ry) * 0.11;
-        ring.style.left = rx + "px";
-        ring.style.top = ry + "px";
-        requestAnimationFrame(t);
-      })();
-      document
-        .querySelectorAll("a,button,.pi,.svc,.ab-fr, .st-card, .st-dot")
-        .forEach((el) => {
-          el.addEventListener("mouseenter", () =>
-            document.body.classList.add("ch"),
-          );
-          el.addEventListener("mouseleave", () =>
-            document.body.classList.remove("ch"),
-          );
-        });
+const cur = document.getElementById("cur"), ring = document.getElementById("cur-ring");
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; });
+(function t() {
+  cur.style.left = mx + "px"; cur.style.top = my + "px";
+  rx += (mx - rx) * 0.11; ry += (my - ry) * 0.11;
+  ring.style.left = rx + "px"; ring.style.top = ry + "px";
+  requestAnimationFrame(t);
+})();
+document.querySelectorAll("a,button,.pi,.svc,.ab-fr, .st-card, .st-dot").forEach((el) => {
+  el.addEventListener("mouseenter", () => document.body.classList.add("ch"));
+  el.addEventListener("mouseleave", () => document.body.classList.remove("ch"));
+});
 
-      /* ── NAV ── */
-      const nv = document.getElementById("nav"),
-        nul = document.getElementById("nul"),
-        ntog = document.getElementById("ntog");
-      window.addEventListener("scroll", () =>
-        nv.classList.toggle("stuck", scrollY > 55),
-      );
-      ntog.addEventListener("click", () => nul.classList.toggle("open"));
-      nul
-        .querySelectorAll("a")
-        .forEach((a) =>
-          a.addEventListener("click", () => nul.classList.remove("open")),
-        );
+/* ── NAV ── */
+const nv = document.getElementById("nav"), nul = document.getElementById("nul"), ntog = document.getElementById("ntog");
+window.addEventListener("scroll", () => nv.classList.toggle("stuck", scrollY > 55));
+ntog.addEventListener("click", () => nul.classList.toggle("open"));
+nul.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => nul.classList.remove("open")));
 
-      /* ── HERO SHADER (WITH MOUSE PARALLAX) ── */
-      (function () {
-        const c = document.getElementById("hc"),
-          gl = c.getContext("webgl2");
-        if (!gl) return;
-        const vs = `#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}`;
-        const fs = `#version 300 es
+/* ── HERO SHADER (WITH MOUSE PARALLAX) ── */
+(function () {
+  const c = document.getElementById("hc"), gl = c.getContext("webgl2");
+  if (!gl) return;
+  const vs = `#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}`;
+  const fs = `#version 300 es
 precision highp float;
 out vec4 O;
 uniform vec2 R;
@@ -80,51 +55,24 @@ void main(){
   col.g*=.82; col.b*=.48;
   O=vec4(col,1.);
 }`;
-        function ms(t, s) {
-          const sh = gl.createShader(t);
-          gl.shaderSource(sh, s);
-          gl.compileShader(sh);
-          return sh;
-        }
-        const p = gl.createProgram();
-        gl.attachShader(p, ms(gl.VERTEX_SHADER, vs));
-        gl.attachShader(p, ms(gl.FRAGMENT_SHADER, fs));
-        gl.linkProgram(p);
-        gl.useProgram(p);
-        const buf = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-        gl.bufferData(
-          gl.ARRAY_BUFFER,
-          new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]),
-          gl.STATIC_DRAW,
-        );
-        const pos = gl.getAttribLocation(p, "position");
-        gl.enableVertexAttribArray(pos);
-        gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
-        const uR = gl.getUniformLocation(p, "R"),
-          uT = gl.getUniformLocation(p, "T"),
-          uM = gl.getUniformLocation(p, "M");
-        function rz() {
-          c.width = c.offsetWidth * Math.min(devicePixelRatio, 1.5);
-          c.height = c.offsetHeight * Math.min(devicePixelRatio, 1.5);
-          gl.viewport(0, 0, c.width, c.height);
-        }
-        rz();
-        window.addEventListener("resize", rz);
-        const t0 = performance.now();
-        (function lp(now) {
-          gl.uniform2f(uR, c.width, c.height);
-          gl.uniform1f(uT, (now - t0) * 0.001);
-          gl.uniform2f(uM, mx, my);
-          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-          requestAnimationFrame(lp);
-        })(t0);
-      })();
+  function ms(t, s) { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); return sh; }
+  const p = gl.createProgram(); gl.attachShader(p, ms(gl.VERTEX_SHADER, vs)); gl.attachShader(p, ms(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); gl.useProgram(p);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(p, "position"); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uR = gl.getUniformLocation(p, "R"), uT = gl.getUniformLocation(p, "T"), uM = gl.getUniformLocation(p, "M");
+  function rz() { c.width = c.offsetWidth * Math.min(devicePixelRatio, 1.5); c.height = c.offsetHeight * Math.min(devicePixelRatio, 1.5); gl.viewport(0, 0, c.width, c.height); }
+  rz(); window.addEventListener("resize", rz);
+  const t0 = performance.now();
+  (function lp(now) {
+    gl.uniform2f(uR, c.width, c.height); gl.uniform1f(uT, (now - t0) * 0.001); gl.uniform2f(uM, mx, my); 
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); requestAnimationFrame(lp);
+  })(t0);
+})();
 
-      /* ── PREMIUM AURORA SPOTLIGHT SHADER ── */
-      (function () {
-        const vs = `#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}`;
-        const fs = `#version 300 es
+/* ── PREMIUM AURORA SPOTLIGHT SHADER ── */
+(function () {
+  const vs = `#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}`;
+  const fs = `#version 300 es
 precision highp float;
 out vec4 O;
 uniform vec2 R;
@@ -160,273 +108,325 @@ void main() {
   O = vec4(color, 1.0);
 }`;
 
-        const CFG = {
-          about: {
-            C1: [0.03, 0.03, 0.04],
-            C2: [0.45, 0.35, 0.15],
-            C3: [0.25, 0.18, 0.08],
-          },
-          services: {
-            C1: [0.02, 0.02, 0.02],
-            C2: [0.35, 0.25, 0.1],
-            C3: [0.2, 0.15, 0.05],
-          },
-          portfolio: {
-            C1: [0.03, 0.04, 0.04],
-            C2: [0.45, 0.35, 0.15],
-            C3: [0.3, 0.2, 0.1],
-          },
-          process: {
-            C1: [0.02, 0.02, 0.03],
-            C2: [0.4, 0.3, 0.12],
-            C3: [0.25, 0.15, 0.05],
-          },
-          reel: {
-            C1: [0.08, 0.02, 0.02],
-            C2: [0.5, 0.35, 0.15],
-            C3: [0.35, 0.15, 0.1],
-          },
-          contact: {
-            C1: [0.03, 0.03, 0.04],
-            C2: [0.45, 0.35, 0.15],
-            C3: [0.25, 0.18, 0.08],
-          },
-        };
+  const CFG = {
+    about:    { C1: [0.03, 0.03, 0.04], C2: [0.45, 0.35, 0.15], C3: [0.25, 0.18, 0.08] },
+    services: { C1: [0.02, 0.02, 0.02], C2: [0.35, 0.25, 0.10], C3: [0.20, 0.15, 0.05] },
+    portfolio:{ C1: [0.03, 0.04, 0.04], C2: [0.45, 0.35, 0.15], C3: [0.30, 0.20, 0.10] },
+    process:  { C1: [0.02, 0.02, 0.03], C2: [0.40, 0.30, 0.12], C3: [0.25, 0.15, 0.05] },
+    reel:     { C1: [0.08, 0.02, 0.02], C2: [0.50, 0.35, 0.15], C3: [0.35, 0.15, 0.10] },
+    contact:  { C1: [0.03, 0.03, 0.04], C2: [0.45, 0.35, 0.15], C3: [0.25, 0.18, 0.08] },
+  };
 
-        document.querySelectorAll(".sc").forEach((cv) => {
-          const key = cv.dataset.s,
-            cfg = CFG[key];
-          if (!cfg) return;
-          const gl = cv.getContext("webgl2");
-          if (!gl) return;
-          function ms(t, s) {
-            const sh = gl.createShader(t);
-            gl.shaderSource(sh, s);
-            gl.compileShader(sh);
-            return sh;
-          }
-          const p = gl.createProgram();
-          gl.attachShader(p, ms(gl.VERTEX_SHADER, vs));
-          gl.attachShader(p, ms(gl.FRAGMENT_SHADER, fs));
-          gl.linkProgram(p);
-          gl.useProgram(p);
-          const buf = gl.createBuffer();
-          gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-          gl.bufferData(
-            gl.ARRAY_BUFFER,
-            new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]),
-            gl.STATIC_DRAW,
-          );
-          const pos = gl.getAttribLocation(p, "position");
-          gl.enableVertexAttribArray(pos);
-          gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
-          gl.uniform3fv(gl.getUniformLocation(p, "C1"), cfg.C1);
-          gl.uniform3fv(gl.getUniformLocation(p, "C2"), cfg.C2);
-          gl.uniform3fv(gl.getUniformLocation(p, "C3"), cfg.C3);
-          const uR = gl.getUniformLocation(p, "R"),
-            uT = gl.getUniformLocation(p, "T");
-          const par = cv.parentElement;
-          function rz() {
-            const dpr = Math.min(devicePixelRatio, 1.0);
-            cv.width = par.offsetWidth * dpr;
-            cv.height = par.offsetHeight * dpr;
-            gl.viewport(0, 0, cv.width, cv.height);
-          }
-          rz();
-          window.addEventListener("resize", rz);
-          const t0 = performance.now();
-          let run = false,
-            raf = null;
-          function lp(now) {
-            gl.uniform2f(uR, cv.width, cv.height);
-            gl.uniform1f(uT, (now - t0) * 0.001);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            raf = requestAnimationFrame(lp);
-          }
-          new IntersectionObserver(
-            (es) => {
-              es.forEach((e) => {
-                if (e.isIntersecting && !run) {
-                  run = true;
-                  raf = requestAnimationFrame(lp);
-                } else if (!e.isIntersecting && run) {
-                  run = false;
-                  cancelAnimationFrame(raf);
-                }
-              });
-            },
-            { threshold: 0.01 },
-          ).observe(par);
-        });
-      })();
-
-      /* ── REVEAL ── */
-      new IntersectionObserver(
-        (es) => {
-          es.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("v");
-          });
-        },
-        { threshold: 0.1 },
-      ).observe || (() => {})();
-      const ro = new IntersectionObserver(
-        (es) => {
-          es.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("v");
-          });
-        },
-        { threshold: 0.1 },
-      );
-      document.querySelectorAll(".r,.kpi").forEach((el) => ro.observe(el));
-
-      /* ── PORTFOLIO FILTER ── */
-      document.querySelectorAll(".pfb").forEach((b) => {
-        b.addEventListener("click", () => {
-          document
-            .querySelectorAll(".pfb")
-            .forEach((x) => x.classList.remove("on"));
-          b.classList.add("on");
-        });
+  document.querySelectorAll(".sc").forEach((cv) => {
+    const key = cv.dataset.s, cfg = CFG[key];
+    if (!cfg) return;
+    const gl = cv.getContext("webgl2");
+    if (!gl) return;
+    function ms(t, s) { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); return sh; }
+    const p = gl.createProgram(); gl.attachShader(p, ms(gl.VERTEX_SHADER, vs)); gl.attachShader(p, ms(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); gl.useProgram(p);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(p, "position"); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform3fv(gl.getUniformLocation(p, "C1"), cfg.C1); gl.uniform3fv(gl.getUniformLocation(p, "C2"), cfg.C2); gl.uniform3fv(gl.getUniformLocation(p, "C3"), cfg.C3);
+    const uR = gl.getUniformLocation(p, "R"), uT = gl.getUniformLocation(p, "T");
+    const par = cv.parentElement;
+    function rz() { const dpr = Math.min(devicePixelRatio, 1.0); cv.width = par.offsetWidth * dpr; cv.height = par.offsetHeight * dpr; gl.viewport(0, 0, cv.width, cv.height); }
+    rz(); window.addEventListener("resize", rz);
+    const t0 = performance.now(); let run = false, raf = null;
+    function lp(now) { gl.uniform2f(uR, cv.width, cv.height); gl.uniform1f(uT, (now - t0) * 0.001); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); raf = requestAnimationFrame(lp); }
+    new IntersectionObserver((es) => {
+      es.forEach((e) => {
+        if (e.isIntersecting && !run) { run = true; raf = requestAnimationFrame(lp); } 
+        else if (!e.isIntersecting && run) { run = false; cancelAnimationFrame(raf); }
       });
+    }, { threshold: 0.01 }).observe(par);
+  });
+})();
 
-      /* ── SMOOTH SCROLL ── */
-      document.querySelectorAll('a[href^="#"]').forEach((a) => {
-        a.addEventListener("click", (e) => {
-          const t = document.querySelector(a.getAttribute("href"));
-          if (t) {
-            e.preventDefault();
-            t.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        });
-      });
+/* ── REVEAL ── */
+new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) e.target.classList.add("v"); }); }, { threshold: 0.1 }).observe || (() => {})();
+const ro = new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) e.target.classList.add("v"); }); }, { threshold: 0.1 });
+document.querySelectorAll(".r,.kpi").forEach((el) => ro.observe(el));
 
-      /* ── PHOTOGRAPHY VERTICAL STACK LOGIC ── */
-      const photoImages = [
-        "https://images.unsplash.com/photo-1554080353-a576cf803bda?w=800&q=80", // Replace with: ./assets/images/photography/1.jpg
-        "https://images.unsplash.com/photo-1551316679-9c6ae9dec224?w=800&q=80", // Replace with: ./assets/images/photography/2.jpg
-        "https://images.unsplash.com/photo-1531303435785-385320317e0b?w=800&q=80", // Replace with: ./assets/images/photography/3.jpg
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80", // Replace with: ./assets/images/photography/4.jpg
-        "https://images.unsplash.com/photo-1554046920-90dcac82458a?w=800&q=80", // Replace with: ./assets/images/photography/5.jpg
-      ];
+/* ── PORTFOLIO FILTER ── */
+document.querySelectorAll(".pfb").forEach((b) => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".pfb").forEach((x) => x.classList.remove("on"));
+    b.classList.add("on");
+  });
+});
 
-      const modal = document.getElementById("photo-modal");
-      const closeBtn = document.getElementById("pm-close");
-      const photoExploreBtn = document.getElementById("btn-photo-explore");
-      const stackContainer = document.getElementById("stack-container");
-      const stackNav = document.getElementById("stack-nav");
-      const stCurr = document.getElementById("st-curr");
-      const stTot = document.getElementById("st-tot");
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const t = document.querySelector(a.getAttribute("href"));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  });
+});
 
-      let currentStackIndex = 0;
-      let isCooldown = false;
+/* ── PHOTOGRAPHY VERTICAL STACK LOGIC (React/Framer Motion Clone) ── */
+const photoImages = [
+  "assets/images/photography/1.jpeg",
+  "assets/images/photography/2.jpeg",
+  "assets/images/photography/3.jpeg",
+  "assets/images/photography/4.jpeg",
+  "assets/images/photography/5.jpeg",
+  "assets/images/photography/6.jpeg"
+];
 
-      stTot.textContent = String(photoImages.length).padStart(2, "0");
+const modal = document.getElementById("photo-modal");
+const closeBtn = document.getElementById("pm-close");
+const photoExploreBtn = document.getElementById("btn-photo-explore");
+const stackContainer = document.getElementById("stack-container");
+const stackNav = document.getElementById("stack-nav");
+const stCurr = document.getElementById("st-curr");
+const stTot = document.getElementById("st-tot");
 
-      photoImages.forEach((src, i) => {
-        const card = document.createElement("div");
-        card.className = "st-card";
-        card.style.backgroundImage = `url(${src})`;
-        stackContainer.appendChild(card);
+let currentIndex = 0;
+let lastNavTime = 0;
+const navCooldown = 400; // ms
 
-        const dot = document.createElement("div");
-        dot.className = "st-dot";
-        dot.addEventListener("click", () =>
-          navigateStack(i - currentStackIndex),
-        );
-        stackNav.appendChild(dot);
-      });
+// Init UI
+if(stTot) stTot.textContent = String(photoImages.length).padStart(2, "0");
 
-      const cards = document.querySelectorAll(".st-card");
-      const dots = document.querySelectorAll(".st-dot");
+photoImages.forEach((src, i) => {
+  const card = document.createElement("div");
+  card.className = "st-card";
+  card.style.backgroundImage = `url(${src})`;
+  card.draggable = false; // Prevent default image dragging
+  stackContainer.appendChild(card);
 
-      function updateStack() {
-        stCurr.textContent = String(currentStackIndex + 1).padStart(2, "0");
+  const dot = document.createElement("button");
+  dot.className = "st-dot";
+  dot.setAttribute("aria-label", `Go to image ${i + 1}`);
+  dot.addEventListener("click", () => {
+    if (i !== currentIndex) {
+      currentIndex = i;
+      updateStack();
+    }
+  });
+  stackNav.appendChild(dot);
+});
 
-        cards.forEach((card, i) => {
-          let diff = i - currentStackIndex;
-          const total = photoImages.length;
-          if (diff > total / 2) diff -= total;
-          if (diff < -total / 2) diff += total;
+const cards = document.querySelectorAll(".st-card");
+const dots = document.querySelectorAll(".st-dot");
 
-          let y = 0,
-            scale = 1,
-            opacity = 1,
-            zIndex = 5,
-            rotateX = 0;
+function updateStack() {
+  stCurr.textContent = String(currentIndex + 1).padStart(2, "0");
 
-          if (diff === 0) {
-            y = 0;
-            scale = 1;
-            opacity = 1;
-            zIndex = 5;
-            rotateX = 0;
-          } else if (diff === -1) {
-            y = -160;
-            scale = 0.82;
-            opacity = 0.6;
-            zIndex = 4;
-            rotateX = 8;
-          } else if (diff === -2) {
-            y = -280;
-            scale = 0.7;
-            opacity = 0.3;
-            zIndex = 3;
-            rotateX = 15;
-          } else if (diff === 1) {
-            y = 160;
-            scale = 0.82;
-            opacity = 0.6;
-            zIndex = 4;
-            rotateX = -8;
-          } else if (diff === 2) {
-            y = 280;
-            scale = 0.7;
-            opacity = 0.3;
-            zIndex = 3;
-            rotateX = -15;
-          } else {
-            y = diff > 0 ? 400 : -400;
-            scale = 0.6;
-            opacity = 0;
-            zIndex = 0;
-            rotateX = diff > 0 ? -20 : 20;
-          }
+  cards.forEach((card, i) => {
+    const total = photoImages.length;
+    let diff = i - currentIndex;
+    
+    // Circular logic
+    if (diff > total / 2) diff -= total;
+    if (diff < -total / 2) diff += total;
 
-          card.style.transform = `translateY(${y}px) scale(${scale}) rotateX(${rotateX}deg)`;
-          card.style.opacity = opacity;
-          card.style.zIndex = zIndex;
-        });
+    let y = 0, scale = 1, opacity = 1, zIndex = 5, rotateX = 0;
 
-        dots.forEach((dot, i) => {
-          dot.classList.toggle("active", i === currentStackIndex);
-        });
-      }
+    // The exact math from the React component
+    if (diff === 0) {
+      y = 0; scale = 1; opacity = 1; zIndex = 5; rotateX = 0;
+      card.classList.add('is-current');
+    } else if (diff === -1) {
+      y = -160; scale = 0.82; opacity = 0.6; zIndex = 4; rotateX = 8;
+      card.classList.remove('is-current');
+    } else if (diff === -2) {
+      y = -280; scale = 0.7; opacity = 0.3; zIndex = 3; rotateX = 15;
+      card.classList.remove('is-current');
+    } else if (diff === 1) {
+      y = 160; scale = 0.82; opacity = 0.6; zIndex = 4; rotateX = -8;
+      card.classList.remove('is-current');
+    } else if (diff === 2) {
+      y = 280; scale = 0.7; opacity = 0.3; zIndex = 3; rotateX = -15;
+      card.classList.remove('is-current');
+    } else {
+      y = diff > 0 ? 400 : -400; scale = 0.6; opacity = 0; zIndex = 0; rotateX = diff > 0 ? -20 : 20;
+      card.classList.remove('is-current');
+    }
 
-      function navigateStack(direction) {
-        if (isCooldown || direction === 0) return;
-        isCooldown = true;
+    card.style.transform = `translateY(${y}px) scale(${scale}) rotateX(${rotateX}deg)`;
+    card.style.opacity = opacity;
+    card.style.zIndex = zIndex;
+  });
 
-        currentStackIndex += direction;
-        if (currentStackIndex >= photoImages.length) currentStackIndex = 0;
-        if (currentStackIndex < 0) currentStackIndex = photoImages.length - 1;
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentIndex);
+  });
+}
 
-        updateStack();
-        setTimeout(() => {
-          isCooldown = false;
-        }, 400);
-      }
+function navigateStack(direction) {
+  const now = Date.now();
+  if (now - lastNavTime < navCooldown) return;
+  lastNavTime = now;
 
-      modal.addEventListener("wheel", (e) => {
-        if (Math.abs(e.deltaY) > 30) {
-          navigateStack(e.deltaY > 0 ? 1 : -1);
-        }
-      });
+  if (direction > 0) {
+    currentIndex = currentIndex === photoImages.length - 1 ? 0 : currentIndex + 1;
+  } else {
+    currentIndex = currentIndex === 0 ? photoImages.length - 1 : currentIndex - 1;
+  }
+  updateStack();
+}
 
-      photoExploreBtn.addEventListener("click", () => {
-        modal.classList.add("active");
-        updateStack();
-      });
+// 1. Mouse Wheel Support
+if(modal) {
+  modal.addEventListener("wheel", (e) => {
+    if (Math.abs(e.deltaY) > 30) {
+      navigateStack(e.deltaY > 0 ? 1 : -1);
+    }
+  }, { passive: true });
+}
 
-      closeBtn.addEventListener("click", () =>
-        modal.classList.remove("active"),
-      );
+// 2. Drag Support (Mimicking Framer Motion `drag="y"`)
+let startY = 0;
+let isDragging = false;
+
+if(stackContainer) {
+  stackContainer.addEventListener("pointerdown", (e) => {
+    startY = e.clientY;
+    isDragging = true;
+  });
+}
+
+window.addEventListener("pointerup", (e) => {
+  if (!isDragging) return;
+  isDragging = false;
+  
+  const deltaY = e.clientY - startY;
+  const threshold = 50; // pixels to trigger swipe
+  
+  if (deltaY < -threshold) {
+    navigateStack(1); // Swipe up -> next
+  } else if (deltaY > threshold) {
+    navigateStack(-1); // Swipe down -> prev
+  }
+});
+
+// Modal Toggles
+if(photoExploreBtn) {
+  photoExploreBtn.addEventListener("click", () => {
+    modal.classList.add("active");
+    updateStack(); // Initialize first render
+  });
+}
+
+if(closeBtn) {
+  closeBtn.addEventListener("click", () => modal.classList.remove("active"));
+}
+/* ── CINEMATIC VIDEO EXPANSION LOGIC ── */
+// Ensure you replace these URLs with your actual local paths (e.g., 'assets/videos/production.mp4')
+const videoData = {
+  production: {
+    src: "https://videos.pexels.com/video-files/5752729/5752729-hd_1920_1080_30fps.mp4",
+    left: "End-to-End", right: "Production"
+  },
+  commercial: {
+    src: "https://videos.pexels.com/video-files/856973/856973-hd_1920_1080_25fps.mp4",
+    left: "Commercial", right: "Campaigns"
+  }
+};
+
+const vModal = document.getElementById("video-modal");
+const vClose = document.getElementById("vm-close");
+const vWrapper = document.getElementById("vm-wrapper");
+const vVideo = document.getElementById("vm-video");
+const vOverlay = document.getElementById("vm-overlay");
+const vLeft = document.getElementById("vm-title-left");
+const vRight = document.getElementById("vm-title-right");
+const vTabs = document.querySelectorAll(".vm-tab");
+const vHint = document.getElementById("vm-hint");
+const vExploreBtns = document.querySelectorAll(".btn-video-explore");
+
+let vProgress = 0; // 0 = minimized, 1 = full screen
+let vActiveKey = "production";
+
+function initVideoModal(key) {
+  vActiveKey = key;
+  const data = videoData[key];
+  vVideo.src = data.src;
+  vLeft.textContent = data.left;
+  vRight.textContent = data.right;
+  
+  vTabs.forEach(t => {
+    t.classList.toggle("active", t.dataset.target === key);
+  });
+  
+  vProgress = 0;
+  updateVideoLayout();
+  vModal.classList.add("active");
+}
+
+function updateVideoLayout() {
+  // Clamp progress between 0 and 1
+  vProgress = Math.max(0, Math.min(vProgress, 1));
+  
+  const isMobile = window.innerWidth < 768;
+  const baseW = isMobile ? 280 : 400;
+  const baseH = isMobile ? 400 : 250;
+  const maxW = window.innerWidth;
+  const maxH = window.innerHeight;
+
+  // Calculate current dimensions
+  const curW = baseW + (maxW - baseW) * vProgress;
+  const curH = baseH + (maxH - baseH) * vProgress;
+  const curBr = 24 * (1 - vProgress); // Border radius goes to 0 at full screen
+
+  vWrapper.style.width = `${curW}px`;
+  vWrapper.style.height = `${curH}px`;
+  vWrapper.style.borderRadius = `${curBr}px`;
+  
+  // Overlay fades away as it gets bigger
+  vOverlay.style.opacity = 0.6 * (1 - vProgress);
+  vHint.style.opacity = 1 - (vProgress * 3); // Fades out quickly
+
+  // Text moves away based on progress
+  const move = vProgress * (isMobile ? 120 : 80); // vw movement
+  if(isMobile) {
+    vLeft.style.transform = `translateY(-${move}vh)`;
+    vRight.style.transform = `translateY(${move}vh)`;
+  } else {
+    vLeft.style.transform = `translateX(-${move}vw)`;
+    vRight.style.transform = `translateX(${move}vw)`;
+  }
+  
+  vLeft.style.opacity = Math.max(0, 1 - vProgress * 1.5);
+  vRight.style.opacity = Math.max(0, 1 - vProgress * 1.5);
+}
+
+// 1. Open Modal Triggers
+vExploreBtns.forEach(btn => {
+  btn.addEventListener("click", () => initVideoModal(btn.dataset.vid));
+});
+
+// 2. Tab Switcher
+vTabs.forEach(tab => {
+  tab.addEventListener("click", () => initVideoModal(tab.dataset.target));
+});
+
+// 3. Scroll / Wheel Interaction
+vModal.addEventListener("wheel", (e) => {
+  // Increase progress based on scroll delta
+  vProgress += e.deltaY * 0.0015; 
+  updateVideoLayout();
+}, { passive: true });
+
+// 4. Touch / Drag Interaction
+let vTouchStartY = 0;
+vModal.addEventListener("touchstart", (e) => {
+  vTouchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+vModal.addEventListener("touchmove", (e) => {
+  const touchY = e.touches[0].clientY;
+  const deltaY = vTouchStartY - touchY;
+  
+  vProgress += deltaY * 0.003;
+  updateVideoLayout();
+  
+  vTouchStartY = touchY;
+}, { passive: true });
+
+// 5. Close Trigger
+vClose.addEventListener("click", () => {
+  vModal.classList.remove("active");
+  setTimeout(() => { vVideo.src = ""; }, 500); // clear memory
+});
