@@ -316,11 +316,11 @@ if(closeBtn) {
 // Ensure you replace these URLs with your actual local paths (e.g., 'assets/videos/production.mp4')
 const videoData = {
   production: {
-    src: "https://videos.pexels.com/video-files/5752729/5752729-hd_1920_1080_30fps.mp4",
+    src: "assets/videos/1.mp4", // Removed the ../
     left: "End-to-End", right: "Production"
   },
   commercial: {
-    src: "https://videos.pexels.com/video-files/856973/856973-hd_1920_1080_25fps.mp4",
+    src: "assets/videos/2.mp4", // Removed the ../
     left: "Commercial", right: "Campaigns"
   }
 };
@@ -343,6 +343,11 @@ function initVideoModal(key) {
   vActiveKey = key;
   const data = videoData[key];
   vVideo.src = data.src;
+  
+  // Explicitly unmute and tell the browser to play
+  vVideo.muted = false;
+  vVideo.play().catch(e => console.log("Autoplay prevented:", e)); 
+  
   vLeft.textContent = data.left;
   vRight.textContent = data.right;
   
@@ -360,15 +365,33 @@ function updateVideoLayout() {
   vProgress = Math.max(0, Math.min(vProgress, 1));
   
   const isMobile = window.innerWidth < 768;
+  
+  // Starting dimensions (The small box)
   const baseW = isMobile ? 280 : 400;
   const baseH = isMobile ? 400 : 250;
-  const maxW = window.innerWidth;
-  const maxH = window.innerHeight;
+  
+  // ── NON-CROPPING FLOATING LIGHTBOX CALCULATION ──
+  // Limit the max size to 85% of the screen on desktop (leaving a sleek margin)
+  const margin = isMobile ? 0.95 : 0.85; 
+  const availableW = window.innerWidth * margin;
+  const availableH = window.innerHeight * margin;
 
-  // Calculate current dimensions
+  // Force a perfect 16:9 aspect ratio so the 1080p video never crops
+  let maxW, maxH;
+  if (availableW * (9 / 16) <= availableH) {
+    maxW = availableW;
+    maxH = availableW * (9 / 16);
+  } else {
+    maxH = availableH;
+    maxW = availableH * (16 / 9);
+  }
+
+  // Calculate current dimensions based on scroll progress
   const curW = baseW + (maxW - baseW) * vProgress;
   const curH = baseH + (maxH - baseH) * vProgress;
-  const curBr = 24 * (1 - vProgress); // Border radius goes to 0 at full screen
+  
+  // Keep a slight rounded edge even when fully expanded for a premium feel
+  const curBr = 24 - (12 * vProgress); 
 
   vWrapper.style.width = `${curW}px`;
   vWrapper.style.height = `${curH}px`;
@@ -378,8 +401,8 @@ function updateVideoLayout() {
   vOverlay.style.opacity = 0.6 * (1 - vProgress);
   vHint.style.opacity = 1 - (vProgress * 3); // Fades out quickly
 
-  // Text moves away based on progress
-  const move = vProgress * (isMobile ? 120 : 80); // vw movement
+  // Text splits and moves away
+  const move = vProgress * (isMobile ? 120 : 80); 
   if(isMobile) {
     vLeft.style.transform = `translateY(-${move}vh)`;
     vRight.style.transform = `translateY(${move}vh)`;
@@ -430,3 +453,257 @@ vClose.addEventListener("click", () => {
   vModal.classList.remove("active");
   setTimeout(() => { vVideo.src = ""; }, 500); // clear memory
 });
+/* ── 3D INFINITE GALLERY LOGIC (Images + Videos) ── */
+function init3DGallery() {
+  const container = document.getElementById("gallery-canvas-container");
+  if (!container || !window.THREE) return;
+
+  // 1. Setup Scene & Camera
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 100);
+  camera.position.z = 0;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  container.appendChild(renderer.domElement);
+
+  // 2. Load Images & Videos (MIX AND MATCH HERE)
+  // Just use your local paths. The code will automatically detect .mp4 files!
+  // 2. Load Images & Videos
+  // Make sure these paths exactly match your folder structure relative to index.html
+  const mediaSources = [
+    "assets/images/photography/1.jpeg",
+    "assets/videos/1.mp4",
+    "assets/images/photography/2.jpeg",
+    "assets/videos/2.mp4",
+    "assets/images/photography/3.jpeg",
+    "assets/images/photography/4.jpeg",
+    "assets/videos/3.mp4",
+    "assets/images/photography/5.jpeg",
+    "assets/images/photography/6.jpeg"
+  ];
+
+  const visibleCount = mediaSources.length; 
+  const depthRange = 50;
+  
+  // Smart Texture Loader with Error Handling and CORS bypass
+  const loader = new THREE.TextureLoader();
+  loader.setCrossOrigin('anonymous'); // Forces WebGL to accept the local file
+
+  const textures = mediaSources.map(src => {
+    if (src.toLowerCase().endsWith('.mp4') || src.toLowerCase().endsWith('.webm')) {
+      const video = document.createElement('video');
+      video.src = src;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.crossOrigin = 'anonymous'; // Forces WebGL to accept the local video
+      video.play().catch(e => console.log("Video autoplay blocked:", e));
+      
+      const texture = new THREE.VideoTexture(video);
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      return texture;
+    } else {
+      // Load image with error callback to help us debug
+      return loader.load(
+        src, 
+        undefined, // onProgress
+        function(err) { console.error("Error loading texture:", src, err); } // onError
+      );
+    }
+  });
+
+  // 3. Custom Physics & Blur Shaders
+  const vShader = `
+    uniform float scrollForce; uniform float time; uniform float isHovered;
+    varying vec2 vUv;
+    void main() {
+      vUv = uv; vec3 pos = position;
+      float curveIntensity = scrollForce * 0.3;
+      float distanceFromCenter = length(pos.xy);
+      float curve = distanceFromCenter * distanceFromCenter * curveIntensity;
+      
+      float ripple1 = sin(pos.x * 2.0 + scrollForce * 3.0) * 0.02;
+      float ripple2 = sin(pos.y * 2.5 + scrollForce * 2.0) * 0.015;
+      float clothEffect = (ripple1 + ripple2) * abs(curveIntensity) * 2.0;
+      
+      float flagWave = 0.0;
+      if (isHovered > 0.5) {
+        float wavePhase = pos.x * 3.0 + time * 8.0;
+        float dampening = smoothstep(-0.5, 0.5, pos.x);
+        flagWave = sin(wavePhase) * 0.1 * dampening;
+        flagWave += sin(pos.x * 5.0 + time * 12.0) * 0.03 * dampening;
+      }
+      
+      pos.z -= (curve + clothEffect + flagWave);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `;
+
+  const fShader = `
+    uniform sampler2D map; uniform float opacity; uniform float blurAmount; uniform float scrollForce;
+    varying vec2 vUv;
+    void main() {
+      vec4 color = texture2D(map, vUv);
+      if (blurAmount > 0.0) {
+        vec2 texelSize = 1.0 / vec2(800.0, 800.0);
+        vec4 blurred = vec4(0.0); float total = 0.0;
+        for (float x = -2.0; x <= 2.0; x += 1.0) {
+          for (float y = -2.0; y <= 2.0; y += 1.0) {
+            vec2 offset = vec2(x, y) * texelSize * blurAmount;
+            float weight = 1.0 / (1.0 + length(vec2(x, y)));
+            blurred += texture2D(map, vUv + offset) * weight; total += weight;
+          }
+        }
+        color = blurred / total;
+      }
+      color.rgb += vec3(abs(scrollForce) * 0.005); 
+      gl_FragColor = vec4(color.rgb, color.a * opacity);
+    }
+  `;
+
+  // 4. Build 3D Meshes
+  const materials = []; const meshes = []; const planesData = [];
+  const geo = new THREE.PlaneGeometry(1, 1, 32, 32);
+
+  for(let i=0; i < visibleCount; i++) {
+    const mat = new THREE.ShaderMaterial({
+      transparent: true,
+      uniforms: {
+        map: { value: null }, opacity: { value: 1.0 }, blurAmount: { value: 0.0 },
+        scrollForce: { value: 0.0 }, time: { value: 0.0 }, isHovered: { value: 0.0 }
+      },
+      vertexShader: vShader, fragmentShader: fShader
+    });
+    materials.push(mat);
+    const mesh = new THREE.Mesh(geo, mat); scene.add(mesh); meshes.push(mesh);
+
+    const hAngle = (i * 2.618) % (Math.PI * 2);
+    const vAngle = (i * 1.618 + Math.PI / 3) % (Math.PI * 2);
+    const x = (Math.sin(hAngle) * (i % 3) * 1.2 * 8) / 3;
+    const y = (Math.cos(vAngle) * ((i + 1) % 4) * 0.8 * 8) / 4;
+
+    planesData.push({
+      index: i, z: ((depthRange / visibleCount) * i) % depthRange, imgIdx: i, x: x, y: y
+    });
+  }
+
+ // 5. Scroll / Touch / Drag Controls
+  let scrollVelocity = 0; let autoPlay = true; let lastInteraction = Date.now();
+
+  // THE FIX: Allow natural page scrolling, but gently spin the gallery as they scroll past
+  container.addEventListener('wheel', (e) => {
+    // We removed e.preventDefault() and added { passive: true } so the page scrolls freely!
+    scrollVelocity += e.deltaY * 0.004; 
+    autoPlay = false; lastInteraction = Date.now();
+  }, { passive: true });
+
+  // Mobile Touch Controls
+  let touchStartY = 0;
+  container.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY; autoPlay = false; lastInteraction = Date.now();
+  }, { passive: true });
+  
+  container.addEventListener('touchmove', (e) => {
+    scrollVelocity += (touchStartY - e.touches[0].clientY) * 0.05; touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  // Desktop Click & Drag Controls
+  const raycaster = new THREE.Raycaster(); const mouse = new THREE.Vector2();
+  let isDragging = false; 
+  let previousMouseY = 0;
+
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true; 
+    previousMouseY = e.clientY; 
+    autoPlay = false; 
+    lastInteraction = Date.now();
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
+  container.addEventListener('mousemove', (e) => {
+    // Hover math for the cloth ripple effect
+    const rect = container.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    // Drag math to spin the gallery
+    if (isDragging) {
+      const deltaY = previousMouseY - e.clientY;
+      scrollVelocity += deltaY * 0.05; // Drag sensitivity
+      previousMouseY = e.clientY;
+    }
+  });
+
+  // 6. Animation Loop
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = Math.min(clock.getDelta(), 0.1);
+    
+    if (Date.now() - lastInteraction > 3000) autoPlay = true;
+    if (autoPlay) scrollVelocity += 0.3 * delta;
+    scrollVelocity *= 0.95; 
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(meshes);
+    meshes.forEach(m => m.material.uniforms.isHovered.value = 0.0);
+    if(intersects.length > 0) intersects[0].object.material.uniforms.isHovered.value = 1.0;
+
+    planesData.forEach((plane, i) => {
+      plane.z += scrollVelocity * delta * 10;
+      
+      if (plane.z >= depthRange) { plane.z -= depthRange; plane.imgIdx = (plane.imgIdx + 1) % mediaSources.length; } 
+      else if (plane.z < 0) { plane.z += depthRange; plane.imgIdx = (plane.imgIdx - 1 + mediaSources.length) % mediaSources.length; }
+
+      const mesh = meshes[i]; const mat = materials[i]; const tex = textures[plane.imgIdx];
+
+      if(tex && tex.image) {
+        mat.uniforms.map.value = tex;
+        // Smart aspect ratio calculation for both Images and Videos
+        const imgW = tex.image.videoWidth || tex.image.width || 1;
+        const imgH = tex.image.videoHeight || tex.image.height || 1;
+        const aspect = imgW / imgH;
+        mesh.scale.set(aspect > 1 ? 2*aspect : 2, aspect > 1 ? 2 : 2/aspect, 1);
+      } else {
+        mesh.scale.set(3, 2, 1);
+      }
+
+      mesh.position.set(plane.x, plane.y, plane.z - (depthRange / 2));
+
+      const nZ = plane.z / depthRange;
+      let opacity = 1, blur = 0;
+
+      if(nZ >= 0.05 && nZ <= 0.25) opacity = (nZ - 0.05) / 0.2;
+      else if(nZ < 0.05) opacity = 0;
+      else if(nZ >= 0.4 && nZ <= 0.43) opacity = 1 - ((nZ - 0.4) / 0.03);
+      else if(nZ > 0.43) opacity = 0;
+
+      if(nZ >= 0.0 && nZ <= 0.1) blur = 8.0 * (1 - (nZ / 0.1));
+      else if(nZ < 0.0) blur = 8.0;
+      else if(nZ >= 0.4 && nZ <= 0.43) blur = 8.0 * ((nZ - 0.4) / 0.03);
+      else if(nZ > 0.43) blur = 8.0;
+
+      mat.uniforms.opacity.value = Math.max(0, Math.min(1, opacity));
+      mat.uniforms.blurAmount.value = Math.max(0, Math.min(8.0, blur));
+      mat.uniforms.time.value = clock.getElapsedTime();
+      mat.uniforms.scrollForce.value = scrollVelocity;
+    });
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+}
+
+setTimeout(init3DGallery, 500);

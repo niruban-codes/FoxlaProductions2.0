@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -103,11 +104,11 @@
         <span class="nav-wm">Foxla</span>
       </a>
       <ul class="nav-ul" id="nul">
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
         <li><a href="#portfolio">Work</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
         <li><a href="#process">Process</a></li>
-        <li><a href="#contact" class="nav-cta">Contact</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
       <button class="ntog" id="ntog">
         <span></span><span></span><span></span>
@@ -154,59 +155,32 @@
       </div>
     </div>
 
-    <section id="about">
-      <canvas class="sc" data-s="about"></canvas>
-      <div class="ab-in">
-        <div class="ab-bd r">
-          <div class="sl">About Us</div>
-          <h2 class="st">
-            Where Vision<br /><span class="dim">Meets the Lens</span>
-          </h2>
-          <div class="sr"></div>
-          <p>
-            Foxla Productions is a <strong>premium creative agency</strong> born
-            from a singular obsession — to craft visual stories that don't just
-            communicate, they <em>resonate</em>. We don't produce content. We
-            engineer culture.
-          </p>
-          <p>
-            From cinematic brand films to editorial photography and immersive
-            digital experiences, every project we touch is a deliberate act of
-            <strong>strategic artistry</strong>. We bridge the gap between bold
-            ideas and flawless execution.
-          </p>
-          <p>
-            We partner with brands that refuse to be ordinary. If you're
-            building something worth seeing —
-            <strong>we're the team to show it</strong>.
-          </p>
-          <div class="krow">
-            <div class="kpi r d1">
-              <div class="kn">120+</div>
-              <div class="kl">Projects Delivered</div>
-            </div>
-            <div class="kpi r d2">
-              <div class="kn">06</div>
-              <div class="kl">Years of Excellence</div>
-            </div>
-            <div class="kpi r d3">
-              <div class="kn">48+</div>
-              <div class="kl">Brand Partnerships</div>
-            </div>
-            <div class="kpi r d4">
-              <div class="kn">12M</div>
-              <div class="kl">Views Generated</div>
-            </div>
-          </div>
-        </div>
-        <div class="ab-fr r d2">
-          <div class="ftl"></div>
-          <div class="ab-fri">
-            <img src="./assets/images/logo2.png" alt="Studio" />
-            <div class="ab-glow"></div>
-          </div>
-          <div class="fbr"></div>
-        </div>
+    <section
+      id="portfolio"
+      style="
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        padding: 0;
+        background: var(--dark);
+      "
+    >
+      <div
+        id="gallery-canvas-container"
+        style="position: absolute; inset: 0; z-index: 1"
+      ></div>
+
+      <div class="pf-overlay-text">
+        <h2 class="st">
+          Our Handpicked<br /><span class="dim">Featured Portfolio</span>
+        </h2>
+      </div>
+
+      <div class="pf-scroll-hint">
+        <p>Click & drag or swipe to navigate</p>
+        <p style="opacity: 0.6">
+          Auto-play resumes after 3 seconds of inactivity
+        </p>
       </div>
     </section>
 
@@ -405,112 +379,58 @@
       </div>
     </section>
 
-    <section id="portfolio">
-      <canvas class="sc" data-s="portfolio"></canvas>
-      <div class="ph r">
-        <div>
-          <div class="sl">Selected Work</div>
-          <h2 class="st">The Portfolio</h2>
+    <section id="about">
+      <canvas class="sc" data-s="about"></canvas>
+      <div class="ab-in">
+        <div class="ab-bd r">
+          <div class="sl">About Us</div>
+          <h2 class="st">
+            Where Vision<br /><span class="dim">Meets the Lens</span>
+          </h2>
           <div class="sr"></div>
-        </div>
-        <div class="pf">
-          <button class="pfb on">All</button>
-          <button class="pfb">Photography</button>
-          <button class="pfb">Video</button>
-          <button class="pfb">Commercial</button>
-        </div>
-      </div>
-      <div class="pg">
-        <div class="pi r">
-          <span class="pbg">Film</span>
-          <img
-            src="https://images.unsplash.com/photo-1536240478700-b869ad10025f?w=1000&auto=format&fit=crop&q=80"
-            alt="Brand Film"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Brand Film</div>
-              <div class="pnm">Luminara — Brand Story</div>
+          <p>
+            Foxla Productions is a <strong>premium creative agency</strong> born
+            from a singular obsession — to craft visual stories that don't just
+            communicate, they <em>resonate</em>. We don't produce content. We
+            engineer culture.
+          </p>
+          <p>
+            From cinematic brand films to editorial photography and immersive
+            digital experiences, every project we touch is a deliberate act of
+            <strong>strategic artistry</strong>. We bridge the gap between bold
+            ideas and flawless execution.
+          </p>
+          <p>
+            We partner with brands that refuse to be ordinary. If you're
+            building something worth seeing —
+            <strong>we're the team to show it</strong>.
+          </p>
+          <div class="krow">
+            <div class="kpi r d1">
+              <div class="kn">07+</div>
+              <div class="kl">Projects Delivered</div>
+            </div>
+            <div class="kpi r d2">
+              <div class="kn">02</div>
+              <div class="kl">Years of Excellence</div>
+            </div>
+            <div class="kpi r d3">
+              <div class="kn">03+</div>
+              <div class="kl">Brand Partnerships</div>
+            </div>
+            <div class="kpi r d4">
+              <div class="kn">100K+</div>
+              <div class="kl">Views Generated</div>
             </div>
           </div>
         </div>
-        <div class="pi r d1">
-          <span class="pbg">Editorial</span>
-          <img
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&auto=format&fit=crop&q=80"
-            alt="Editorial"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Editorial</div>
-              <div class="pnm">Void Collection</div>
-            </div>
+        <div class="ab-fr r d2">
+          <div class="ftl"></div>
+          <div class="ab-fri">
+            <img src="./assets/images/logo2.png" alt="Studio" />
+            <div class="ab-glow"></div>
           </div>
-        </div>
-        <div class="pi r d2">
-          <span class="pbg">Lifestyle</span>
-          <img
-            src="https://images.unsplash.com/photo-1504700610630-ac6aba3536d3?w=700&auto=format&fit=crop&q=80"
-            alt="Lifestyle"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Lifestyle</div>
-              <div class="pnm">Atmosphere Series</div>
-            </div>
-          </div>
-        </div>
-        <div class="pi r d3">
-          <span class="pbg">Identity</span>
-          <img
-            src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=700&auto=format&fit=crop&q=80"
-            alt="Brand"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Brand Identity</div>
-              <div class="pnm">Onyx — Rebrand</div>
-            </div>
-          </div>
-        </div>
-        <div class="pi r d4">
-          <span class="pbg">Campaign</span>
-          <img
-            src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=700&auto=format&fit=crop&q=80"
-            alt="Campaign"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Campaign</div>
-              <div class="pnm">Raven — Social Campaign</div>
-            </div>
-          </div>
-        </div>
-        <div class="pi r d2">
-          <span class="pbg">Commercial</span>
-          <img
-            src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=700&auto=format&fit=crop&q=80"
-            alt="Ad"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Commercial</div>
-              <div class="pnm">Nexus — Product Launch</div>
-            </div>
-          </div>
-        </div>
-        <div class="pi r d1">
-          <span class="pbg">Photo</span>
-          <img
-            src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=900&auto=format&fit=crop&q=80"
-            alt="Studio"
-          />
-          <div class="pov">
-            <div>
-              <div class="pc">Photography</div>
-              <div class="pnm">Studio — Interiors</div>
-            </div>
-          </div>
+          <div class="fbr"></div>
         </div>
       </div>
     </section>
@@ -558,19 +478,6 @@
       </div>
     </section>
 
-    <div id="reel" class="r">
-      <canvas class="sc" data-s="reel"></canvas>
-      <h2>Ready to see what we're made of?</h2>
-      <p>
-        Watch our latest showreel — two minutes that say more than a thousand
-        words.
-      </p>
-      <a href="#contact" class="rb"
-        ><div class="pic"></div>
-        Watch Showreel</a
-      >
-    </div>
-
     <section id="contact">
       <canvas class="sc" data-s="contact"></canvas>
       <div class="cin">
@@ -599,7 +506,7 @@
               </svg>
             </div>
             <div>
-              <label>Email</label><span>hello@foxlaproductions.com</span>
+              <label>Email</label><span>foxlaproductions@gmail.com</span>
             </div>
           </div>
           <div class="cd">
@@ -616,7 +523,7 @@
                 />
               </svg>
             </div>
-            <div><label>Phone</label><span>+94 77 000 0000</span></div>
+            <div><label>Phone</label><span>+94 70 331 0725</span></div>
           </div>
           <div class="cd">
             <div class="cico">
@@ -637,9 +544,53 @@
             <div><label>Based In</label><span>Colombo, Sri Lanka</span></div>
           </div>
           <div class="sls">
-            <a href="#" class="sc-a">IG</a><a href="#" class="sc-a">YT</a
-            ><a href="#" class="sc-a">LI</a><a href="#" class="sc-a">Be</a
-            ><a href="#" class="sc-a">TK</a>
+            <a
+              href="https://www.instagram.com/foxlaproductions/"
+              class="sc-a"
+              aria-label="Instagram"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path
+                  d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                ></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+
+            <a
+              href="www.linkedin.com/in/nallirajahniruban"
+              class="sc-a"
+              aria-label="LinkedIn"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                ></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+            </a>
           </div>
         </div>
         <div class="r d2">
