@@ -313,15 +313,22 @@ if(closeBtn) {
   closeBtn.addEventListener("click", () => modal.classList.remove("active"));
 }
 /* ── CINEMATIC VIDEO EXPANSION LOGIC ── */
-// Ensure you replace these URLs with your actual local paths (e.g., 'assets/videos/production.mp4')
+// Notice we added a "type" property to tell the math how to shape the box
 const videoData = {
   production: {
-    src: "assets/videos/1.mp4", // Removed the ../
-    left: "End-to-End", right: "Production"
+    src: "assets/videos/1.mp4",
+    left: "End-to-End", right: "Production",
+    type: "landscape"
   },
   commercial: {
-    src: "assets/videos/2.mp4", // Removed the ../
-    left: "Commercial", right: "Campaigns"
+    src: "assets/videos/2.mp4",
+    left: "Commercial", right: "Campaigns",
+    type: "landscape"
+  },
+  creative: {
+    src: "assets/videos/3.mp4", // <-- Put your portrait video path here
+    left: "Creative", right: "Direction",
+    type: "portrait"
   }
 };
 
@@ -336,7 +343,7 @@ const vTabs = document.querySelectorAll(".vm-tab");
 const vHint = document.getElementById("vm-hint");
 const vExploreBtns = document.querySelectorAll(".btn-video-explore");
 
-let vProgress = 0; // 0 = minimized, 1 = full screen
+let vProgress = 0; 
 let vActiveKey = "production";
 
 function initVideoModal(key) {
@@ -344,7 +351,6 @@ function initVideoModal(key) {
   const data = videoData[key];
   vVideo.src = data.src;
   
-  // Explicitly unmute and tell the browser to play
   vVideo.muted = false;
   vVideo.play().catch(e => console.log("Autoplay prevented:", e)); 
   
@@ -361,47 +367,59 @@ function initVideoModal(key) {
 }
 
 function updateVideoLayout() {
-  // Clamp progress between 0 and 1
   vProgress = Math.max(0, Math.min(vProgress, 1));
-  
   const isMobile = window.innerWidth < 768;
   
-  // Starting dimensions (The small box)
-  const baseW = isMobile ? 280 : 400;
-  const baseH = isMobile ? 400 : 250;
+  // ── SMART FORMAT DETECTION ──
+  const isPortrait = videoData[vActiveKey].type === "portrait";
   
-  // ── NON-CROPPING FLOATING LIGHTBOX CALCULATION ──
-  // Limit the max size to 85% of the screen on desktop (leaving a sleek margin)
+  let baseW, baseH;
+  if (isPortrait) {
+    // Starting box for portrait (tall)
+    baseH = isMobile ? 380 : 450;
+    baseW = baseH * (9 / 16); // Mathematically locks to 9:16
+  } else {
+    // Starting box for landscape (wide)
+    baseW = isMobile ? 320 : 480; 
+    baseH = baseW * (9 / 16); // Mathematically locks to 16:9
+  }
+  
   const margin = isMobile ? 0.95 : 0.85; 
   const availableW = window.innerWidth * margin;
   const availableH = window.innerHeight * margin;
 
-  // Force a perfect 16:9 aspect ratio so the 1080p video never crops
   let maxW, maxH;
-  if (availableW * (9 / 16) <= availableH) {
-    maxW = availableW;
-    maxH = availableW * (9 / 16);
+  if (isPortrait) {
+    // Portrait expansion logic: maximize height first
+    if (availableH * (9 / 16) <= availableW) {
+      maxH = availableH;
+      maxW = availableH * (9 / 16);
+    } else {
+      maxW = availableW;
+      maxH = availableW * (16 / 9);
+    }
   } else {
-    maxH = availableH;
-    maxW = availableH * (16 / 9);
+    // Landscape expansion logic: maximize width first
+    if (availableW * (9 / 16) <= availableH) {
+      maxW = availableW;
+      maxH = availableW * (9 / 16);
+    } else {
+      maxH = availableH;
+      maxW = availableH * (16 / 9);
+    }
   }
 
-  // Calculate current dimensions based on scroll progress
   const curW = baseW + (maxW - baseW) * vProgress;
   const curH = baseH + (maxH - baseH) * vProgress;
-  
-  // Keep a slight rounded edge even when fully expanded for a premium feel
   const curBr = 24 - (12 * vProgress); 
 
   vWrapper.style.width = `${curW}px`;
   vWrapper.style.height = `${curH}px`;
   vWrapper.style.borderRadius = `${curBr}px`;
   
-  // Overlay fades away as it gets bigger
   vOverlay.style.opacity = 0.6 * (1 - vProgress);
-  vHint.style.opacity = 1 - (vProgress * 3); // Fades out quickly
+  vHint.style.opacity = 1 - (vProgress * 3); 
 
-  // Text splits and moves away
   const move = vProgress * (isMobile ? 120 : 80); 
   if(isMobile) {
     vLeft.style.transform = `translateY(-${move}vh)`;
@@ -425,9 +443,8 @@ vTabs.forEach(tab => {
   tab.addEventListener("click", () => initVideoModal(tab.dataset.target));
 });
 
-// 3. Scroll / Wheel Interaction
+// 3. Scroll Interaction
 vModal.addEventListener("wheel", (e) => {
-  // Increase progress based on scroll delta
   vProgress += e.deltaY * 0.0015; 
   updateVideoLayout();
 }, { passive: true });
@@ -439,19 +456,16 @@ vModal.addEventListener("touchstart", (e) => {
 }, { passive: true });
 
 vModal.addEventListener("touchmove", (e) => {
-  const touchY = e.touches[0].clientY;
-  const deltaY = vTouchStartY - touchY;
-  
+  const deltaY = vTouchStartY - e.touches[0].clientY;
   vProgress += deltaY * 0.003;
   updateVideoLayout();
-  
-  vTouchStartY = touchY;
+  vTouchStartY = e.touches[0].clientY;
 }, { passive: true });
 
 // 5. Close Trigger
 vClose.addEventListener("click", () => {
   vModal.classList.remove("active");
-  setTimeout(() => { vVideo.src = ""; }, 500); // clear memory
+  setTimeout(() => { vVideo.src = ""; }, 500); 
 });
 /* ── 3D INFINITE GALLERY LOGIC (Images + Videos) ── */
 function init3DGallery() {

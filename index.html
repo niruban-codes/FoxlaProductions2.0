@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Foxla Productions — Built on Creativity. Powered by Visuals.</title>
+    <link rel="icon" type="image/png" href="assets/logo/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -72,6 +73,7 @@
           Production
         </button>
         <button class="vm-tab" data-target="commercial">Commercial</button>
+        <button class="vm-tab" data-target="creative">Creative</button>
       </div>
 
       <div class="vm-title-container">
@@ -330,7 +332,9 @@
             visual systems. We define the aesthetic DNA of your brand at every
             level.
           </p>
-          <span class="slnk">Explore →</span>
+          <button class="slnk btn-video-explore" data-vid="creative">
+            Explore Creative →
+          </button>
         </div>
 
         <div class="svc r d3">
@@ -374,7 +378,7 @@
             Premium digital experiences built for performance and beauty. From
             UX strategy to pixel-perfect code — web presences that convert.
           </p>
-          <span class="slnk">Explore →</span>
+          <button class="slnk btn-web-explore">Explore Web →</button>
         </div>
       </div>
     </section>
@@ -545,7 +549,7 @@
           </div>
           <div class="sls">
             <a
-              href="https://www.instagram.com/foxlaproductions/"
+              href="https://www.instagram.com/foxlaproductions/ target=_blank"
               class="sc-a"
               aria-label="Instagram"
             >
@@ -569,7 +573,8 @@
             </a>
 
             <a
-              href="www.linkedin.com/in/nallirajahniruban"
+              href="https://www.linkedin.com/in/nallirajahniruban"
+              target="_blank"
               class="sc-a"
               aria-label="LinkedIn"
             >
@@ -628,7 +633,7 @@
             ></textarea>
           </div>
           <button class="bsnd" id="bsnd">Send Message →</button>
-          <a href="https://wa.me/94770000000" class="wa" target="_blank">
+          <a href="https://wa.me/94703310725" class="wa" target="_blank">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
@@ -671,11 +676,20 @@
         <div class="fcol">
           <h4>Social</h4>
           <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">YouTube</a></li>
-            <li><a href="#">LinkedIn</a></li>
-            <li><a href="#">Behance</a></li>
-            <li><a href="#">TikTok</a></li>
+            <li>
+              <a
+                href="https://www.instagram.com/foxlaproductions/"
+                target="_blank"
+                >Instagram</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/nallirajahniruban"
+                target="_blank"
+                >LinkedIn</a
+              >
+            </li>
           </ul>
         </div>
       </div>
@@ -684,7 +698,12 @@
           © 2025 <span>Foxla Productions</span>. All rights reserved.
         </p>
         <p class="fcp">
-          Crafted with obsession in <span>Colombo, Sri Lanka</span>
+          Crafted with obsession by
+          <span
+            ><a href="https://niruban-portfolio.netlify.app/" target="_blank"
+              >Nallirajah Niruban</a
+            ></span
+          >
         </p>
       </div>
     </footer>
@@ -752,6 +771,241 @@
           this.disabled = false;
         }, 3500);
       });
+    </script>
+    <style>
+      #web-modal {
+        background: rgba(11, 13, 15, 0.95) !important;
+        cursor: none !important;
+      }
+      .web-stack-container {
+        position: relative;
+        width: 70vw;
+        max-width: 900px;
+        height: 65vh;
+        max-height: 600px;
+        perspective: 1200px;
+        transform-style: preserve-3d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        --z-offset: 35px;
+        --y-offset: 15px;
+        cursor: none !important;
+      }
+      .web-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #1a1d20;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9);
+        border: 1px solid rgba(208, 161, 18, 0.5);
+        cursor: none !important;
+        will-change: transform;
+        user-select: none;
+        touch-action: none;
+        transform: translateZ(calc(-1 * var(--z-offset) * var(--i)))
+          translateY(calc(var(--y-offset) * var(--i)))
+          translateX(var(--swipe-x, 0px)) rotateY(var(--swipe-rotate, 0deg));
+        transition:
+          transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          opacity 0.4s ease;
+      }
+      .web-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.05),
+          transparent 40%
+        );
+        pointer-events: none;
+      }
+      .web-card.dragging {
+        transition: none !important;
+        cursor: none !important;
+      }
+      .web-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        pointer-events: none;
+      }
+      @media (max-width: 768px) {
+        .web-stack-container {
+          width: 85vw;
+          height: 50vh;
+          --z-offset: 20px;
+          --y-offset: 10px;
+        }
+      }
+    </style>
+
+    <div id="web-modal" class="modal-overlay">
+      <button
+        class="modal-close"
+        id="wm-close"
+        style="cursor: none; z-index: 10001"
+      >
+        Close ✕
+      </button>
+      <div class="web-stack-container" id="wm-stack"></div>
+    </div>
+
+    <script>
+      const wModal = document.getElementById("web-modal");
+      const wClose = document.getElementById("wm-close");
+      const wExploreBtns = document.querySelectorAll(".btn-web-explore");
+      const wStack = document.getElementById("wm-stack");
+      let cardOrder = [];
+
+      // Test with Unsplash images first to prove the engine works!
+      const webImages = [
+        "assets/images/Webdesign/1.png",
+        "assets/images/Webdesign/2.png",
+      ];
+
+      function initWebModal() {
+        wStack.innerHTML = "";
+        cardOrder = webImages.map((_, i) => i);
+
+        webImages.forEach((src, i) => {
+          const card = document.createElement("article");
+          card.className = "web-card";
+          card.dataset.index = i;
+
+          const img = document.createElement("img");
+          img.src = src;
+          img.draggable = false;
+
+          card.appendChild(img);
+          wStack.appendChild(card);
+        });
+
+        updateCardPositions();
+        setupSwipePhysics();
+        wModal.classList.add("active");
+      }
+
+      function updateCardPositions() {
+        const cards = Array.from(wStack.querySelectorAll(".web-card"));
+        cards.forEach((card) => {
+          const originalIndex = parseInt(card.dataset.index);
+          const displayIndex = cardOrder.indexOf(originalIndex);
+          card.style.setProperty("--i", displayIndex);
+          card.style.zIndex = webImages.length - displayIndex;
+          card.style.setProperty("--swipe-x", "0px");
+          card.style.setProperty("--swipe-rotate", "0deg");
+          card.style.opacity = "1";
+        });
+      }
+
+      function setupSwipePhysics() {
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+
+        if (wStack._swipeController) wStack._swipeController.abort();
+        wStack._swipeController = new AbortController();
+        const options = { signal: wStack._swipeController.signal };
+
+        wStack.addEventListener(
+          "pointerdown",
+          (e) => {
+            const cards = Array.from(wStack.querySelectorAll(".web-card"));
+            const topCard = cards.find(
+              (c) => cardOrder.indexOf(parseInt(c.dataset.index)) === 0,
+            );
+            if (
+              !topCard ||
+              (!topCard.contains(e.target) && e.target !== topCard)
+            )
+              return;
+
+            isDragging = true;
+            startX = e.clientX;
+            currentX = e.clientX;
+            topCard.classList.add("dragging");
+          },
+          options,
+        );
+
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            if (!isDragging) return;
+            currentX = e.clientX;
+            const deltaX = currentX - startX;
+
+            const cards = Array.from(wStack.querySelectorAll(".web-card"));
+            const topCard = cards.find(
+              (c) => cardOrder.indexOf(parseInt(c.dataset.index)) === 0,
+            );
+            if (topCard) {
+              topCard.style.setProperty("--swipe-x", `${deltaX}px`);
+              topCard.style.setProperty(
+                "--swipe-rotate",
+                `${deltaX * 0.15}deg`,
+              );
+              topCard.style.opacity = 1 - Math.min(Math.abs(deltaX) / 300, 0.5);
+            }
+          },
+          options,
+        );
+
+        window.addEventListener(
+          "pointerup",
+          () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const deltaX = currentX - startX;
+
+            const cards = Array.from(wStack.querySelectorAll(".web-card"));
+            const topCard = cards.find(
+              (c) => cardOrder.indexOf(parseInt(c.dataset.index)) === 0,
+            );
+            if (topCard) {
+              topCard.classList.remove("dragging");
+              if (Math.abs(deltaX) > 100) {
+                const dir = Math.sign(deltaX);
+                topCard.style.transition =
+                  "transform 0.4s ease, opacity 0.4s ease";
+                topCard.style.setProperty(
+                  "--swipe-x",
+                  `${dir * window.innerWidth}px`,
+                );
+                topCard.style.setProperty("--swipe-rotate", `${dir * 45}deg`);
+                setTimeout(() => {
+                  const first = cardOrder.shift();
+                  cardOrder.push(first);
+                  updateCardPositions();
+                }, 300);
+              } else {
+                topCard.style.transition =
+                  "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease";
+                topCard.style.setProperty("--swipe-x", "0px");
+                topCard.style.setProperty("--swipe-rotate", "0deg");
+                topCard.style.opacity = "1";
+              }
+            }
+          },
+          options,
+        );
+      }
+
+      wExploreBtns.forEach((btn) => {
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.addEventListener("click", initWebModal);
+      });
+
+      if (wClose)
+        wClose.addEventListener("click", () =>
+          wModal.classList.remove("active"),
+        );
     </script>
   </body>
 </html>
